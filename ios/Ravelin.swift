@@ -11,219 +11,99 @@ class RavelinCore: RCTEventEmitter {
         super.init()
     }
 
-    @objc func setUp(_ apiKey: String) -> Optional<Any> {
+    @objc func setUp(_ apiKey: String) -> Void {
         Ravelin.createInstance(apiKey)
-        return Optional<Any>.none
     }
 
     @objc func getDeviceId() -> String {
         return Ravelin.sharedInstance().deviceId
     }
 
-    @objc func setCustomerId(_ customerId: String) -> Optional<Any> {
+    @objc func setCustomerId(_ customerId: String) -> Void {
         Ravelin.sharedInstance().customerId = customerId
-        return Optional<Any>.none
     }
 
-    @objc func setOrderId(_ orderId: String) -> Optional<Any> {
+    @objc func setOrderId(_ orderId: String) -> Void {
         Ravelin.sharedInstance().orderId = orderId
-        return Optional<Any>.none
-    }
-
-    @objc func trackFingerprint(_
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackFingerprint({ data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
     }
 
 
-    @objc func trackPage(_ pageTitle: String, data: [String:String],
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackPage(_ pageTitle: String, data: [String:String]) -> Void
     {
-        Ravelin.sharedInstance().trackPage(pageTitle, eventProperties: data, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackPage(pageTitle, eventProperties: data)
     }
 
 
-    @objc func trackSearch(_ pageTitle: String, searchValue: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackSearch(_ pageTitle: String, searchValue: String) -> Void
     {
-        Ravelin.sharedInstance().trackSearch(pageTitle, searchValue: searchValue, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackSearch(pageTitle, searchValue: searchValue)
     }
 
-    @objc func trackSelectOption(_ pageTitle: String, option: String, optionValue: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackSelectOption(_ pageTitle: String, option: String, optionValue: String) -> Void
     {
-        Ravelin.sharedInstance().trackSelectOption(pageTitle, option: option, optionValue: optionValue, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackSelectOption(pageTitle, option: option, optionValue: optionValue)
     }
 
 
-    @objc func trackAddToCart(_ pageTitle: String, itemName: String, quantity: NSNumber,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackAddToCart(_ pageTitle: String, itemName: String, quantity: NSNumber) -> Void
     {
-        Ravelin.sharedInstance().trackAddToCart(pageTitle: pageTitle, itemName: itemName, quantity: quantity, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackAddToCart(pageTitle: pageTitle, itemName: itemName, quantity: quantity)
     }
 
 
-    @objc func trackRemoveFromCart(_ pageTitle: String, itemName: String, quantity: NSNumber,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackRemoveFromCart(_ pageTitle: String, itemName: String, quantity: NSNumber) -> Void
     {
-        Ravelin.sharedInstance().trackRemoveFromCart(pageTitle: pageTitle, itemName: itemName, quantity: quantity, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackRemoveFromCart(pageTitle: pageTitle, itemName: itemName, quantity: quantity)
     }
 
-    @objc func trackAddToWishlist(_ pageTitle: String, itemName: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackAddToWishlist(_ pageTitle: String, itemName: String) -> Void
     {
-        Ravelin.sharedInstance().trackAddToWishlist(pageTitle: pageTitle, itemName: itemName, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackAddToWishlist(pageTitle: pageTitle, itemName: itemName)
     }
 
-    @objc func trackRemoveFromWishlist(_ pageTitle: String, itemName: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackRemoveFromWishlist(_ pageTitle: String, itemName: String) -> Void
     {
-        Ravelin.sharedInstance().trackRemoveFromWishlist(pageTitle: pageTitle, itemName: itemName, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackRemoveFromWishlist(pageTitle: pageTitle, itemName: itemName)
     }
 
 
-    @objc func trackLanguageChange(_ pageTitle: String, language: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackLanguageChange(_ pageTitle: String, language: String) -> Void
     {
 
-        Ravelin.sharedInstance().track(pageTitle, eventName: "LANGUAGE_CHANGED", eventProperties: ["language":language], completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().track(pageTitle, eventName: "LANGUAGE_CHANGED", eventProperties: ["language":language])
     }
 
-    @objc func trackCurrencyChange(_ pageTitle: String, currency: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackCurrencyChange(_ pageTitle: String, currency: String) -> Void
     {
 
-        Ravelin.sharedInstance().track(pageTitle, eventName: "CURRENCY_CHANGED", eventProperties: ["currency":currency], completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().track(pageTitle, eventName: "CURRENCY_CHANGED", eventProperties: ["currency":currency])
     }
 
 
-    @objc func trackViewContent(_ pageTitle: String, contentType: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackViewContent(_ pageTitle: String, contentType: String) -> Void
     {
 
-        Ravelin.sharedInstance().trackViewContent(pageTitle, contentType: contentType, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackViewContent(pageTitle, contentType: contentType)
     }
 
 
-    @objc func trackEvent(_ eventType:String, pageTitle: String, data: [String:String],
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackEvent(_ eventType:String, pageTitle: String, data: [String:String] ) -> Void
     {
 
-        Ravelin.sharedInstance().track(pageTitle, eventName: eventType, eventProperties: data, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().track(pageTitle, eventName: eventType, eventProperties: data)
     }
 
 
-    @objc func trackLogin(_ pageTitle: String, data: [String:String],
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackLogin(_ pageTitle: String, data: [String:String]) -> Void
     {
 
-        Ravelin.sharedInstance().trackLogin(pageTitle, eventProperties: data, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackLogin(pageTitle, eventProperties: data)
     }
 
-    @objc func trackLogout(_ pageTitle: String, data: [String:String],
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+    @objc func trackLogout(_ pageTitle: String, data: [String:String]) -> Void
     {
 
-        Ravelin.sharedInstance().trackLogout(pageTitle, eventProperties: data, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
+        Ravelin.sharedInstance().trackLogout(pageTitle, eventProperties: data)
     }
 
     override static func requiresMainQueueSetup() -> Bool {

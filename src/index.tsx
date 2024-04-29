@@ -1,80 +1,44 @@
-import { NativeModules, Platform } from 'react-native';
-
-const LINKING_ERROR =
-  `The package 'react-native-ravelin' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo Go\n';
-
-// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-const Ravelin =
-  NativeModules.RavelinCore ??
-  new Proxy(
-    {},
-    {
-      get() {
-        throw new Error(LINKING_ERROR);
-      },
-    }
-  );
+import { NativeModules } from 'react-native';
+const { RavelinCore: Ravelin } = NativeModules;
 
 interface RavelinModuleInterface {
-  setUp: (apiKey: string) => Promise<boolean>;
+  setUp: (apiKey: string) => void;
   getDeviceId: () => Promise<string>;
   setCustomerId: (customerId: string) => void;
   setOrderId: (orderId: string) => void;
-  trackFingerprint: () => Promise<boolean>;
-  trackPage: (
-    pageTitle: string,
-    data: Record<string, string>
-  ) => Promise<boolean>;
-  trackSearch: (pageTitle: string, searchValue: string) => Promise<boolean>;
+  trackPage: (pageTitle: string, data: Record<string, string>) => void;
+  trackSearch: (pageTitle: string, searchValue: string) => void;
   trackSelectOption: (
     pageTitle: string,
     option: string,
     optionValue: string
-  ) => Promise<boolean>;
+  ) => void;
   trackAddToCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => Promise<boolean>;
+  ) => void;
   trackRemoveFromCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => Promise<boolean>;
-  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<boolean>;
-  trackRemoveFromWishlist: (
-    pageTitle: string,
-    itemName: string
-  ) => Promise<boolean>;
-  trackLanguageChange: (
-    pageTitle: string,
-    language: string
-  ) => Promise<boolean>;
-  trackCurrencyChange: (
-    pageTitle: string,
-    currency: string
-  ) => Promise<boolean>;
-  trackViewContent: (
-    pageTitle: string,
-    contentType: string
-  ) => Promise<boolean>;
+  ) => void;
+  trackAddToWishlist: (pageTitle: string, itemName: string) => void;
+  trackRemoveFromWishlist: (pageTitle: string, itemName: string) => void;
+  trackLanguageChange: (pageTitle: string, language: string) => void;
+  trackCurrencyChange: (pageTitle: string, currency: string) => void;
+  trackViewContent: (pageTitle: string, contentType: string) => void;
   trackEvent: (
     eventType: string,
     pageTitle: string,
     data: Record<string, string>
-  ) => Promise<boolean>;
+  ) => void;
   trackLogin: (
     customerId: string,
     pageTitle: string,
     data: Record<string, string>
-  ) => Promise<boolean>;
-  trackLogout: (
-    pageTitle: string,
-    data: Record<string, string>
-  ) => Promise<boolean>;
+  ) => void;
+  trackLogout: (pageTitle: string, data: Record<string, string>) => void;
 }
 
 export default Ravelin as RavelinModuleInterface;

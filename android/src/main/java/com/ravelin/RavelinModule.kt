@@ -13,19 +13,6 @@ import com.ravelin.core.callback.RavelinRequestCallback
 import com.ravelin.core.model.RavelinError
 import com.ravelin.core.util.typealiasses.Properties
 
-
-class RavelinRequestCallbackPromiseWrapper(promise: Promise) : RavelinRequestCallback() {
-    private val promise = promise
-
-    override fun success() {
-        promise.resolve(true)
-    }
-
-    override fun failure(error: RavelinError) {
-        promise.reject(Error(error.message))
-    }
-}
-
 class RavelinModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
 
@@ -34,31 +21,29 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod()
-    fun setUp(apiKey: String, promise: Promise) {
+    fun setUp(apiKey: String) {
         currentActivity?.let {
           val ravelin: RavelinSDK? = RavelinSDK.createInstance(it.application, apiKey, object : RavelinCallback<RavelinSDK>() {
 
             override fun success(ravelin: RavelinSDK?) {
-              Log.d("Ravelin SDK Setup Success", "Hooray")
-              promise.resolve(true)
+              Log.d("Ravelin SDK Setup", "Success")
             }
 
             override fun failure(error: RavelinError) {
               Log.e("Ravelin SDK Setup Error", error.message!!)
-              promise.reject(error.message!!)
             }
           })
         }
 
     }
 
-    @ReactMethod
+    @ReactMethod()
     fun getDeviceId(promise: Promise) {
         val ravelinSdk = RavelinSDK.getSharedInstance()
         promise.resolve(ravelinSdk!!.deviceId)
     }
 
-    @ReactMethod(isBlockingSynchronousMethod = true)
+    @ReactMethod
     fun setCustomerId(customerId: String) {
         RavelinSDK.getSharedInstance()!!.customerId = customerId
         return
@@ -71,26 +56,18 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     }
 
     @ReactMethod
-    fun trackFingerprint(promise: Promise) {
-        RavelinSDK.getSharedInstance()
-            ?.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
-    }
-
-    @ReactMethod
-    fun trackPage(pageTitle: String, data: ReadableMap, promise: Promise) {
+    fun trackPage(pageTitle: String, data: ReadableMap) {
         RavelinSDK.getSharedInstance()!!.trackPage(
             pageTitle,
-            Properties(data.toHashMap()),
-            RavelinRequestCallbackPromiseWrapper(promise)
+            Properties(data.toHashMap())
         )
     }
 
     @ReactMethod
-    fun trackSearch(pageTitle: String, searchValue: String, promise: Promise) {
+    fun trackSearch(pageTitle: String, searchValue: String) {
         RavelinSDK.getSharedInstance()!!.trackSearch(
             pageTitle,
-            searchValue,
-            RavelinRequestCallbackPromiseWrapper(promise)
+            searchValue
         )
     }
 
@@ -98,113 +75,100 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     fun trackSelectOption(
         pageTitle: String,
         option: String,
-        optionValue: String,
-        promise: Promise
+        optionValue: String
     ) {
         RavelinSDK.getSharedInstance()!!.trackSelectOption(
             pageTitle,
             option,
-            optionValue,
-            RavelinRequestCallbackPromiseWrapper(promise)
+            optionValue
         )
     }
 
     @ReactMethod
-    fun trackAddToCart(pageTitle: String, itemName: String, quantity: Int, promise: Promise) {
+    fun trackAddToCart(pageTitle: String, itemName: String, quantity: Int) {
         RavelinSDK.getSharedInstance()!!.trackAddToCart(
             pageTitle,
             itemName,
-            quantity,
-            RavelinRequestCallbackPromiseWrapper(promise)
+            quantity
         )
     }
 
     @ReactMethod
-    fun trackRemoveFromCart(pageTitle: String, itemName: String, quantity: Int, promise: Promise) {
+    fun trackRemoveFromCart(pageTitle: String, itemName: String, quantity: Int) {
         RavelinSDK.getSharedInstance()!!.trackRemoveFromCart(
             pageTitle,
             itemName,
-            quantity,
-            RavelinRequestCallbackPromiseWrapper(promise)
+            quantity
         )
     }
 
     @ReactMethod
-    fun trackAddToWishlist(pageTitle: String, itemName: String, promise: Promise) {
+    fun trackAddToWishlist(pageTitle: String, itemName: String) {
         RavelinSDK.getSharedInstance()
-            ?.trackAddToWishlist(pageTitle, itemName, RavelinRequestCallbackPromiseWrapper(promise))
+            ?.trackAddToWishlist(pageTitle, itemName)
     }
 
     @ReactMethod
-    fun trackRemoveFromWishlist(pageTitle: String, itemName: String, promise: Promise) {
+    fun trackRemoveFromWishlist(pageTitle: String, itemName: String) {
         RavelinSDK.getSharedInstance()!!.trackRemoveFromWishlist(
             pageTitle,
-            itemName,
-            RavelinRequestCallbackPromiseWrapper(promise)
+            itemName
         )
     }
 
     @ReactMethod
-    fun trackLanguageChange(pageTitle: String, language: String, promise: Promise) {
+    fun trackLanguageChange(pageTitle: String, language: String) {
         RavelinSDK.getSharedInstance()!!.trackLanguageChange(
             pageTitle,
-            language,
-            RavelinRequestCallbackPromiseWrapper(promise)
+            language
         )
     }
 
     @ReactMethod
-    fun trackCurrencyChange(pageTitle: String, currency: String, promise: Promise) {
+    fun trackCurrencyChange(pageTitle: String, currency: String) {
         RavelinSDK.getSharedInstance()!!.trackCurrencyChange(
             pageTitle,
-            currency,
-            RavelinRequestCallbackPromiseWrapper(promise)
+            currency
         )
     }
 
     @ReactMethod
-    fun trackViewContent(pageTitle: String, contentType: String, promise: Promise) {
+    fun trackViewContent(pageTitle: String, contentType: String) {
         RavelinSDK.getSharedInstance()!!.trackViewContent(
             pageTitle,
-            contentType,
-            RavelinRequestCallbackPromiseWrapper(promise)
+            contentType
         )
     }
 
     @ReactMethod
-    fun trackEvent(eventType: String, pageTitle: String, data: ReadableMap, promise: Promise) {
+    fun trackEvent(eventType: String, pageTitle: String, data: ReadableMap) {
         RavelinSDK.getSharedInstance()!!.trackEvent(
             eventType,
             pageTitle,
-            Properties(data.toHashMap()),
-            RavelinRequestCallbackPromiseWrapper(promise)
+            Properties(data.toHashMap())
         )
     }
 
     @ReactMethod
-    fun trackLogin(customerId: String, pageTitle: String, data: ReadableMap, promise: Promise) {
+    fun trackLogin(customerId: String, pageTitle: String, data: ReadableMap) {
         RavelinSDK.getSharedInstance()!!.trackLogIn(
             customerId,
             pageTitle,
-            Properties(data.toHashMap()),
-            RavelinRequestCallbackPromiseWrapper(promise)
+            Properties(data.toHashMap())
         )
     }
 
     @ReactMethod
-    fun trackLogOut(pageTitle: String, data: ReadableMap, promise: Promise) {
+    fun trackLogOut(pageTitle: String, data: ReadableMap) {
         RavelinSDK.getSharedInstance()!!.trackLogOut(
             pageTitle,
-            Properties(data.toHashMap()),
-            RavelinRequestCallbackPromiseWrapper(promise)
+            Properties(data.toHashMap())
         )
     }
 
     @ReactMethod
-    fun trackPaste(pageTitle: String, value: String, promise: Promise) {
+    fun trackPaste(pageTitle: String, value: String) {
         RavelinSDK.getSharedInstance()
-            ?.trackPaste(pageTitle, value, RavelinRequestCallbackPromiseWrapper(promise))
+            ?.trackPaste(pageTitle, value)
     }
-
-
 }
