@@ -2,43 +2,49 @@ import { NativeModules } from 'react-native';
 const { RavelinCore: Ravelin } = NativeModules;
 
 interface RavelinModuleInterface {
-  setUp: (apiKey: string) => void;
+  setUp: (apiKey: string) => Promise<Boolean>;
   getDeviceId: () => Promise<string>;
-  setCustomerId: (customerId: string) => void;
-  setOrderId: (orderId: string) => void;
-  trackPage: (pageTitle: string, data: Record<string, string>) => void;
-  trackSearch: (pageTitle: string, searchValue: string) => void;
+  setCustomerId: (customerId: string) => Promise<Boolean>;
+  setOrderId: (orderId: string) => Promise<Boolean>;
+  trackPage: (pageTitle: string, data: Record<string, string>) => Promise<void>;
+  trackSearch: (pageTitle: string, searchValue: string) => Promise<void>;
   trackSelectOption: (
     pageTitle: string,
     option: string,
     optionValue: string
-  ) => void;
+  ) => Promise<void>;
   trackAddToCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => void;
+  ) => Promise<void>;
   trackRemoveFromCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => void;
-  trackAddToWishlist: (pageTitle: string, itemName: string) => void;
-  trackRemoveFromWishlist: (pageTitle: string, itemName: string) => void;
-  trackLanguageChange: (pageTitle: string, language: string) => void;
-  trackCurrencyChange: (pageTitle: string, currency: string) => void;
-  trackViewContent: (pageTitle: string, contentType: string) => void;
+  ) => Promise<void>;
+  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<void>;
+  trackRemoveFromWishlist: (
+    pageTitle: string,
+    itemName: string
+  ) => Promise<void>;
+  trackLanguageChange: (pageTitle: string, language: string) => Promise<void>;
+  trackCurrencyChange: (pageTitle: string, currency: string) => Promise<void>;
+  trackViewContent: (pageTitle: string, contentType: string) => Promise<void>;
   trackEvent: (
     eventType: string,
     pageTitle: string,
     data: Record<string, string>
-  ) => void;
+  ) => Promise<void>;
   trackLogin: (
     customerId: string,
     pageTitle: string,
     data: Record<string, string>
-  ) => void;
-  trackLogout: (pageTitle: string, data: Record<string, string>) => void;
+  ) => Promise<void>;
+  trackLogout: (
+    pageTitle: string,
+    data: Record<string, string>
+  ) => Promise<void>;
 }
 
 export default Ravelin as RavelinModuleInterface;

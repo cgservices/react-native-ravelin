@@ -11,12 +11,18 @@ class RavelinCore: RCTEventEmitter {
         super.init()
     }
 
-    @objc func setUp(_ apiKey: String) -> Void {
-        Ravelin.createInstance(apiKey)
-    }
+    @objc func setUp(_ apiKey: String, resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
+            var ravelin = Ravelin.createInstance(apiKey)
+            if (ravelin.deviceId != "") {
+                resolve(true)
+            } else {
+                let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+                reject("instantiation_error", "Ravelin SDK could not be instantiatied", error)
+            }
+        }
 
-    @objc func getDeviceId(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
-        var deviceId = Ravelin.sharedInstance().deviceId 
+    @objc func getDeviceId(_ resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
+        var deviceId = Ravelin.sharedInstance().deviceId
         if (deviceId != ""){
             resolve(deviceId)
         } else {
@@ -25,8 +31,24 @@ class RavelinCore: RCTEventEmitter {
         }
     }
 
-    @objc func setCustomerId(_ customerId: String) -> Void {
+    @objc func setCustomerId(_ customerId: String, resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
         Ravelin.sharedInstance().customerId = customerId
+        if (Ravelin.sharedInstance().customerId != "") {
+            resolve(true)
+        } else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("customer_id_error", "Ravelin SDK could save Customer ID", error)
+        }
+    }
+
+    @objc func setOrderId(_ orderId: String, resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
+        Ravelin.sharedInstance().orderId = orderId
+        if (Ravelin.sharedInstance().orderId != "") {
+            resolve(true)
+        } else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("instantiation_error", "Ravelin SDK could not save Order ID", error)
+        }
     }
 
     @objc func setOrderId(_ orderId: String) -> Void {

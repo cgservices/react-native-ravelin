@@ -33,62 +33,49 @@ The various handlers the SDK provides are the ones listed in this interface here
 
 ```js
 interface RavelinModuleInterface {
-  setUp: (apiKey: string) => Promise<boolean>;
+  setUp: (apiKey: string) => Promise<Boolean>;
   getDeviceId: () => Promise<string>;
-  setCustomerId: (customerId: string) => void;
-  setOrderId: (orderId: string) => void;
-  trackFingerprint: () => Promise<boolean>;
-  trackPage: (
-    pageTitle: string,
-    data: Record<string, string>
-  ) => Promise<boolean>;
-  trackSearch: (pageTitle: string, searchValue: string) => Promise<boolean>;
+  setCustomerId: (customerId: string) => Promise<Boolean>;
+  setOrderId: (orderId: string) => Promise<Boolean>;
+  trackPage: (pageTitle: string, data: Record<string, string>) => Promise<void>;
+  trackSearch: (pageTitle: string, searchValue: string) => Promise<void>;
   trackSelectOption: (
     pageTitle: string,
     option: string,
     optionValue: string
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   trackAddToCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   trackRemoveFromCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => Promise<boolean>;
-  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<boolean>;
+  ) => Promise<void>;
+  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<void>;
   trackRemoveFromWishlist: (
     pageTitle: string,
     itemName: string
-  ) => Promise<boolean>;
-  trackLanguageChange: (
-    pageTitle: string,
-    language: string
-  ) => Promise<boolean>;
-  trackCurrencyChange: (
-    pageTitle: string,
-    currency: string
-  ) => Promise<boolean>;
-  trackViewContent: (
-    pageTitle: string,
-    contentType: string
-  ) => Promise<boolean>;
+  ) => Promise<void>;
+  trackLanguageChange: (pageTitle: string, language: string) => Promise<void>;
+  trackCurrencyChange: (pageTitle: string, currency: string) => Promise<void>;
+  trackViewContent: (pageTitle: string, contentType: string) => Promise<void>;
   trackEvent: (
     eventType: string,
     pageTitle: string,
     data: Record<string, string>
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   trackLogin: (
     customerId: string,
     pageTitle: string,
     data: Record<string, string>
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   trackLogout: (
     pageTitle: string,
     data: Record<string, string>
-  ) => Promise<boolean>;
+  ) => Promise<void>;
 }
 ---
 

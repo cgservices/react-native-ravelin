@@ -2,13 +2,25 @@
 
 @interface RCT_EXTERN_MODULE(RavelinCore, NSObject)
 
-RCT_EXTERN_METHOD(setUp:(NSString *)apiKey)
+RCT_EXTERN_METHOD(
+                  setUp:(NSString *)apiKey
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject
+)
 RCT_EXTERN_METHOD(
                   getDeviceId:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject
+                  reject:(RCTPromiseRejectBlock)reject
 )
-RCT_EXTERN_METHOD(setCustomerId:(NSString *)customerId)
-RCT_EXTERN_METHOD(setOrderId:(NSString *)orderId)
+RCT_EXTERN_METHOD(
+                  setCustomerId:(NSString *)customerId
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject
+                  )
+RCT_EXTERN_METHOD(
+                  setOrderId:(NSString *)orderId
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject
+                  )
 RCT_EXTERN_METHOD(
                   trackPage:(NSString *)pageTitle
                   data:(NSDictionary *)data
