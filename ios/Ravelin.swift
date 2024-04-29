@@ -15,8 +15,14 @@ class RavelinCore: RCTEventEmitter {
         Ravelin.createInstance(apiKey)
     }
 
-    @objc func getDeviceId() -> String {
-        return Ravelin.sharedInstance().deviceId
+    @objc func getDeviceId(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) -> Void {
+        var deviceId = Ravelin.sharedInstance().deviceId 
+        if (deviceId != ""){
+            resolve(deviceId)
+        } else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("device_id_not_available", "Device ID could not be fetched", error)
+        }
     }
 
     @objc func setCustomerId(_ customerId: String) -> Void {
