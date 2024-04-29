@@ -64,7 +64,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
         return
     }
 
-    @ReactMethod(isBlockingSynchronousMethod = true)
+    @ReactMethod
     fun setOrderId(orderId: String) {
         RavelinSDK.getSharedInstance()!!.orderId = orderId
         return

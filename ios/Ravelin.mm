@@ -5,7 +5,7 @@
 RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(setUp:(NSString *)apiKey)
 RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(getDeviceId)
 RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(setCustomerId:(NSString *)customerId)
-RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(setOrderId:(NSString *)orderId)
+RCT_EXTERN_METHOD(setOrderId:(NSString *)orderId)
 RCT_EXTERN_METHOD(
                 trackFingerprint:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject
