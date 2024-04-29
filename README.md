@@ -33,7 +33,7 @@ The various handlers the SDK provides are the ones listed in this interface here
 
 ```js
 interface RavelinModuleInterface {
-  setUp: (apiKey: string) => void;
+  setUp: (apiKey: string) => Promise<boolean>;
   getDeviceId: () => Promise<string>;
   setCustomerId: (customerId: string) => void;
   setOrderId: (orderId: string) => void;
