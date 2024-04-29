@@ -3,7 +3,7 @@
 @interface RCT_EXTERN_MODULE(RavelinCore, NSObject)
 
 RCT_EXTERN_METHOD(setUp:(NSString *)apiKey)
-RCT_EXTERN__BLOCKING_SYNCHRONOUS_METHOD(getDeviceId)
+RCT_EXTERN_METHOD(getDeviceId)
 RCT_EXTERN_METHOD(setCustomerId:(NSString *)customerId)
 RCT_EXTERN_METHOD(setOrderId:(NSString *)orderId)
 RCT_EXTERN_METHOD(
