@@ -6,7 +6,9 @@
   "module": "lib/module/index",
   "types": "lib/typescript/src/index.d.ts",
   "author": "niek.albers@startselect.com",
+  "homepage": "https://github.com/cgservices/react-native-ravelin",
   "react-native": "src/index",
+  "license": "UNLICENSED",
   "source": "src/index",
   "files": [
     "src",
