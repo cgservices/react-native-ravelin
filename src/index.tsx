@@ -1,39 +1,25 @@
-# react-native-ravelin
+import { NativeModules, Platform } from 'react-native';
 
-React Native Ravelin SDK
+const LINKING_ERROR =
+  `The package 'react-native-ravelin' doesn't seem to be linked. Make sure: \n\n` +
+  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
+  '- You rebuilt the app after installing the package\n' +
+  '- You are not using Expo Go\n';
 
-## Installation
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const Ravelin =
+  NativeModules.RavelinCore ??
+  new Proxy(
+    {},
+    {
+      get() {
+        throw new Error(LINKING_ERROR);
+      },
+    }
+  );
 
-```sh
-npm install react-native-ravelin
-```
-or 
-```
-yarn add react-native-ravelin
-```
-
-## Usage
-
-```js
-const { RavelinCore: Ravelin } = require('react-native-ravelin');
-
-...
-  await Ravelin.setUp(API_KEY)
-  Ravelin.setCustomerId(USER.id)
-  const deviceId = await Ravelin.getDeviceId()
-  await Ravelin.trackPage('Login', { any: 'additional data' })
-  await Ravelin.trackLogin(USER.email || SOME_UNIQUE_ID, 'Login', { any: 'additional data' })
-  await Ravelin.trackLogout('Logout', { any: 'additional data' })
-
-```
-
-## Ravelin Interface
-
-The various handlers the SDK provides are the ones listed in this interface here...
-
-```js
 interface RavelinModuleInterface {
-  setUp: (apiKey: string) => void;
+  setUp: (apiKey: string) => Promise<boolean>;
   getDeviceId: () => Promise<string>;
   setCustomerId: (customerId: string) => void;
   setOrderId: (orderId: string) => void;
@@ -90,6 +76,5 @@ interface RavelinModuleInterface {
     data: Record<string, string>
   ) => Promise<boolean>;
 }
----
 
-Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)
+export default Ravelin as RavelinModuleInterface;
