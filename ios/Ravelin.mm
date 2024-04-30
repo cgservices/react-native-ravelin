@@ -99,7 +99,7 @@ RCT_EXTERN_METHOD(
                   reject:(RCTPromiseRejectBlock)reject
                   )
 RCT_EXTERN_METHOD(
-                  trackLogout:(NSString *)pageTitle
+                  trackLogOut:(NSString *)pageTitle
                   data:(NSDictionary *)data
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject

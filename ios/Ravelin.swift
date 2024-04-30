@@ -224,7 +224,7 @@ class RavelinCore: RCTEventEmitter {
         })
     }
 
-    @objc func trackLogout(_ pageTitle: String, data: [String:String],
+    @objc func trackLogOut(_ pageTitle: String, data: [String:String],
                                 resolve: @escaping RCTPromiseResolveBlock,
                                 reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
