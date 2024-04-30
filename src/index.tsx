@@ -41,7 +41,7 @@ interface RavelinModuleInterface {
     pageTitle: string,
     data: Record<string, string>
   ) => Promise<void>;
-  trackLogout: (
+  trackLogOut: (
     pageTitle: string,
     data: Record<string, string>
   ) => Promise<void>;
