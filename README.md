@@ -1,6 +1,6 @@
 # react-native-ravelin
 
-React Native Ravelin SDK
+React Native Ravelin SDK:
 
 ## Installation
 
