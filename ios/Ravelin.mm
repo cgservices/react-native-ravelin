@@ -43,14 +43,14 @@ RCT_EXTERN_METHOD(
 RCT_EXTERN_METHOD(
                   trackAddToCart:(NSString *)pageTitle
                   itemName:(NSString *)itemName
-                  quantity:(NSNumber *)quantity
+                  quantity:(nonnull NSNumber *)quantity
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject
                   )
 RCT_EXTERN_METHOD(
                   trackRemoveFromCart:(NSString *)pageTitle
                   itemName:(NSString *)itemName
-                  quantity:(NSNumber *)quantity
+                  quantity:(nonnull NSNumber *)quantity
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject
                   )
