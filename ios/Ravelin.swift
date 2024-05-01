@@ -210,7 +210,7 @@ class RavelinCore: RCTEventEmitter {
     }
 
 
-    @objc func trackLogin(_ pageTitle: String, data: [String:String],
+    @objc func trackLogin(_ _customerId: String, pageTitle: String, data: [String:String],
                                 resolve: @escaping RCTPromiseResolveBlock,
                                 reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
