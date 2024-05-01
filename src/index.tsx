@@ -45,6 +45,7 @@ interface RavelinModuleInterface {
     pageTitle: string,
     data: Record<string, string>
   ) => Promise<void>;
+  trackFingerprint: () => Promise<boolean>;
 }
 
 export default Ravelin as RavelinModuleInterface;

@@ -194,6 +194,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
+    fun trackFingerprint(promise: Promise) {
+        RavelinSDK.getSharedInstance()
+            ?.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
+    }
+
+  @ReactMethod
   fun trackPaste(pageTitle: String, value: String, promise: Promise) {
     RavelinSDK.getSharedInstance()
       ?.trackPaste(pageTitle, value, RavelinRequestCallbackPromiseWrapper(promise))
