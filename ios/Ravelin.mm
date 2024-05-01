@@ -8,6 +8,10 @@ RCT_EXTERN_METHOD(
                   reject:(RCTPromiseRejectBlock)reject
 )
 RCT_EXTERN_METHOD(
+                trackFingerprint:(RCTPromiseResolveBlock)resolve
+                reject:(RCTPromiseRejectBlock)reject
+                )
+RCT_EXTERN_METHOD(
                   getDeviceId:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject
 )

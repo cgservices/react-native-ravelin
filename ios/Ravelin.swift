@@ -224,6 +224,19 @@ class RavelinCore: RCTEventEmitter {
         })
     }
 
+    @objc func trackFingerprint(_
+                            resolve: @escaping RCTPromiseResolveBlock,
+                            reject: @escaping RCTPromiseRejectBlock ) -> Void
+    {
+        Ravelin.sharedInstance().trackFingerprint({ data, response, error in
+            if error != nil {
+                reject("0", error?.localizedDescription, error)
+            } else {
+                resolve(data)
+            }
+        })
+    }
+
     @objc func trackLogOut(_ pageTitle: String, data: [String:String],
                                 resolve: @escaping RCTPromiseResolveBlock,
                                 reject: @escaping RCTPromiseRejectBlock ) -> Void
