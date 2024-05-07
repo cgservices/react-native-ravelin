@@ -2,7 +2,7 @@ import { NativeModules } from 'react-native';
 const { RavelinCore: Ravelin } = NativeModules;
 
 interface RavelinModuleInterface {
-  setUp: (apiKey: string) => Promise<Boolean>;
+  setUp: (apiKey: string, appVersion: string) => Promise<Boolean>;
   getDeviceId: () => Promise<string>;
   setCustomerId: (customerId: string) => Promise<Boolean>;
   setOrderId: (orderId: string) => Promise<Boolean>;
