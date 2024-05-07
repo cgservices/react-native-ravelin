@@ -11,7 +11,7 @@ class RavelinCore: RCTEventEmitter {
         super.init()
     }
 
-    @objc func setUp(_ apiKey: String, _appVersion: String, resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc func setUp(_ apiKey: String, _appVersion: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
             var ravelin = Ravelin.createInstance(apiKey)
             if (ravelin.deviceId != "") {
                 resolve(true)
