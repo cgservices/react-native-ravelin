@@ -204,4 +204,9 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     RavelinSDK.getSharedInstance()
       ?.trackPaste(pageTitle, value, RavelinRequestCallbackPromiseWrapper(promise))
   }
+
+  @ReactMethod
+  fun cleanup(promise: Promise) {
+    RavelinSDK.cleanup(RavelinRequestCallbackPromiseWrapper(promise))
+  }
 }

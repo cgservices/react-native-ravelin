@@ -46,6 +46,8 @@ interface RavelinModuleInterface {
     data: Record<string, string>
   ) => Promise<void>;
   trackFingerprint: () => Promise<boolean>;
+  // cleanup - android only
+  cleanup?: () => Promise<boolean>;
 }
 
 export default Ravelin as RavelinModuleInterface;
