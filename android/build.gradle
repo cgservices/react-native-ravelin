@@ -58,12 +58,12 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-
   }
 
   buildTypes {
     release {
       minifyEnabled false
+      proguardFiles 'proguard-rules.pro'
     }
   }
 
@@ -99,6 +99,6 @@ dependencies {
   //noinspection GradleDynamicVersion
   implementation "com.facebook.react:react-native:+"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'com.ravelin.sdk:ravelin-core:3.1.0'
+  implementation 'com.ravelin.sdk:ravelin-core:4.0.0'
 }
 

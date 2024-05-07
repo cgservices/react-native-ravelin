@@ -4,6 +4,7 @@
 
 RCT_EXTERN_METHOD(
                   setUp:(NSString *)apiKey
+                  _appVersion:(NSString *)_appVersion
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject
 )
@@ -96,7 +97,7 @@ RCT_EXTERN_METHOD(
                   reject:(RCTPromiseRejectBlock)reject
                   )
 RCT_EXTERN_METHOD(
-                  trackLogin:(NSString *)customerId
+                  trackLogin:(NSString *)_customerId
                   pageTitle:(NSString *)pageTitle
                   data:(NSDictionary *)data
                   resolve:(RCTPromiseResolveBlock)resolve
@@ -108,5 +109,4 @@ RCT_EXTERN_METHOD(
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject
                   )
-
 @end

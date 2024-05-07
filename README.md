@@ -12,6 +12,39 @@ or
 yarn add react-native-ravelin
 ```
 
+## Additional setup
+
+In your app's build.gradle add the following
+```
+  android {
+    ...
+    compileOptions {
+        ...
+        coreLibraryDesugaringEnabled true
+    }
+  }
+
+  allprojects {
+    repositories {
+        /* other repositories */
+        maven {
+            setUrl("https://maven.ravelin.com/public/repositories/core-android/")
+        }
+    }
+  }
+
+  dependencies {
+    ...
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+  }
+```
+
+Since RN projects that support proguard rules do not inherently use a R8 compiler for obfuscation, you need to add some proguard rules to your `proguard-rules.pro` file in your android project
+Documentation can be found here:
+- https://developer.ravelin.com/merchant/libraries-and-sdks/android/core-sdk/android/#proguard-rules
+Rules to be added:
+- https://developer.ravelin.com/merchant/libraries-and-sdks/android/core-sdk/proguard-rules-core/
+
 ## Usage
 
 ```js
@@ -19,11 +52,13 @@ const { RavelinCore: Ravelin } = require('react-native-ravelin');
 
 ...
   await Ravelin.setUp(API_KEY)
-  Ravelin.setCustomerId(USER.id)
+  await Ravelin.setCustomerId(USER.id)
+  // must be called immediately after setup and setting customer ID to register device info
+  await Ravelin.trackFingerprint()
   const deviceId = await Ravelin.getDeviceId()
   await Ravelin.trackPage('Login', { any: 'additional data' })
   await Ravelin.trackLogin(USER.email || SOME_UNIQUE_ID, 'Login', { any: 'additional data' })
-  await Ravelin.trackLogout('Logout', { any: 'additional data' })
+  await Ravelin.trackLogOut('Logout', { any: 'additional data' })
 
 ```
 
@@ -33,49 +68,63 @@ The various handlers the SDK provides are the ones listed in this interface here
 
 ```js
 interface RavelinModuleInterface {
-  setUp: (apiKey: string) => Promise<Boolean>;
+  setUp: (apiKey: string, appVersion: string) => Promise<boolean>;
   getDeviceId: () => Promise<string>;
-  setCustomerId: (customerId: string) => Promise<Boolean>;
-  setOrderId: (orderId: string) => Promise<Boolean>;
-  trackPage: (pageTitle: string, data: Record<string, string>) => Promise<void>;
-  trackSearch: (pageTitle: string, searchValue: string) => Promise<void>;
+  setCustomerId: (customerId: string) => Promise<boolean>;
+  setOrderId: (orderId: string) => Promise<boolean>;
+  trackPage: (
+    pageTitle: string,
+    data: Record<string, string>
+  ) => Promise<boolean>;
+  trackSearch: (pageTitle: string, searchValue: string) => Promise<boolean>;
   trackSelectOption: (
     pageTitle: string,
     option: string,
     optionValue: string
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   trackAddToCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   trackRemoveFromCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => Promise<void>;
-  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<void>;
+  ) => Promise<boolean>;
+  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<boolean>;
   trackRemoveFromWishlist: (
     pageTitle: string,
     itemName: string
-  ) => Promise<void>;
-  trackLanguageChange: (pageTitle: string, language: string) => Promise<void>;
-  trackCurrencyChange: (pageTitle: string, currency: string) => Promise<void>;
-  trackViewContent: (pageTitle: string, contentType: string) => Promise<void>;
+  ) => Promise<boolean>;
+  trackLanguageChange: (
+    pageTitle: string,
+    language: string
+  ) => Promise<boolean>;
+  trackCurrencyChange: (
+    pageTitle: string,
+    currency: string
+  ) => Promise<boolean>;
+  trackViewContent: (
+    pageTitle: string,
+    contentType: string
+  ) => Promise<boolean>;
   trackEvent: (
     eventType: string,
     pageTitle: string,
     data: Record<string, string>
-  ) => Promise<void>;
+  ) => Promise<boolean>;
   trackLogin: (
     customerId: string,
     pageTitle: string,
     data: Record<string, string>
-  ) => Promise<void>;
-  trackLogout: (
+  ) => Promise<boolean>;
+  trackLogOut: (
     pageTitle: string,
     data: Record<string, string>
-  ) => Promise<void>;
+  ) => Promise<boolean>;
+  trackFingerprint: () => Promise<boolean>;
+  trackPaste: () => Promise<boolean>;
 }
 ---
 
