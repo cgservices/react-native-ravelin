@@ -38,6 +38,13 @@ In your app's build.gradle add the following
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
   }
 ```
+
+Since RN projects that support proguard rules do not inherently use a R8 compiler for obfuscation, you need to add some proguard rules to your `proguard-rules.pro` file in your android project
+Documentation can be found here:
+- https://developer.ravelin.com/merchant/libraries-and-sdks/android/core-sdk/android/#proguard-rules
+Rules to be added:
+- https://developer.ravelin.com/merchant/libraries-and-sdks/android/core-sdk/proguard-rules-core/
+
 ## Usage
 
 ```js
