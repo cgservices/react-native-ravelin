@@ -4,6 +4,7 @@
 
 RCT_EXTERN_METHOD(
                   setUp:(NSString *)apiKey
+                  appVersion:(NSString *)appVersion
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(RCTPromiseRejectBlock)reject
 )
