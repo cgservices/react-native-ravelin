@@ -196,17 +196,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun trackFingerprint(promise: Promise) {
       val ravelin = RavelinSDK.getSharedInstance()
-      ravelin!!.trackFingerprint(object : RavelinRequestCallback() {
-          override fun success() {
-              Log.d("API Request Success", "hooray")
-              promise.resolve(true)
-          }
-
-          override fun failure(error: RavelinError) {
-              Log.d("API Request Error", error.message!!)
-              promise.resolve(false)
-          }
-      })
+      ravelin!!.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
   }
 
   @ReactMethod
