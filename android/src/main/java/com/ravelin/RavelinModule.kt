@@ -32,26 +32,26 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     return "RavelinCore"
   }
 
-  @ReactMethod()
-  fun setUp(apiKey: String, promise: Promise) {
+  @ReactMethod
+  fun setUp(apiKey: String, appVersion: String, promise: Promise) {
     currentActivity?.let {
-      val ravelin: RavelinSDK? = RavelinSDK.createInstance(it.application, apiKey, object : RavelinCallback<RavelinSDK>() {
+      RavelinSDK.createInstance(it.application, apiKey, appVersion, null, object : RavelinCallback<RavelinSDK>() {
 
-        override fun success(ravelin: RavelinSDK?) {
+        override fun success(result: RavelinSDK?) {
           Log.d("Ravelin SDK Setup", "Success")
           promise.resolve(true)
         }
 
         override fun failure(error: RavelinError) {
           Log.e("Ravelin SDK Setup Error", error.message!!)
-          promise.reject(Error(error.message))
+          promise.resolve(false)
         }
       })
     }
 
   }
 
-  @ReactMethod()
+  @ReactMethod
   fun getDeviceId(promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     promise.resolve(ravelinSdk!!.deviceId)
@@ -194,10 +194,20 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   }
 
   @ReactMethod
-    fun trackFingerprint(promise: Promise) {
-        RavelinSDK.getSharedInstance()
-            ?.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
-    }
+  fun trackFingerprint(promise: Promise) {
+      val ravelin = RavelinSDK.getSharedInstance()
+      ravelin!!.trackFingerprint(object : RavelinRequestCallback() {
+          override fun success() {
+              Log.d("API Request Success", "hooray")
+              promise.resolve(true)
+          }
+
+          override fun failure(error: RavelinError) {
+              Log.d("API Request Error", error.message!!)
+              promise.resolve(false)
+          }
+      })
+  }
 
   @ReactMethod
   fun trackPaste(pageTitle: String, value: String, promise: Promise) {
