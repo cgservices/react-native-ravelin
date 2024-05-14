@@ -207,6 +207,16 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun cleanup(promise: Promise) {
-    RavelinSDK.cleanup(RavelinRequestCallbackPromiseWrapper(promise))
+    RavelinSDK.cleanup(object : RavelinCallback<RavelinSDK>() {
+      override fun success(result: RavelinSDK?) {
+        Log.d("Ravelin SDK Cleanup", "Success")
+        promise.resolve(true)
+      }
+
+      override fun failure(error: RavelinError) {
+        Log.e("Ravelin SDK Cleanup Error", error.message!!)
+        promise.resolve(false)
+      }
+    })
   }
 }
