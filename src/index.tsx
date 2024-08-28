@@ -2,10 +2,10 @@ import { NativeModules } from 'react-native';
 const { RavelinCore: Ravelin } = NativeModules;
 
 interface RavelinModuleInterface {
-  setUp: (apiKey: string, appVersion: string) => Promise<Boolean>;
+  setUp: (apiKey: string, appVersion: string) => Promise<boolean>;
   getDeviceId: () => Promise<string>;
-  setCustomerId: (customerId: string) => Promise<Boolean>;
-  setOrderId: (orderId: string) => Promise<Boolean>;
+  setCustomerId: (customerId: string) => Promise<boolean>;
+  setOrderId: (orderId: string) => Promise<boolean>;
   trackPage: (pageTitle: string, data: Record<string, string>) => Promise<void>;
   trackSearch: (pageTitle: string, searchValue: string) => Promise<void>;
   trackSelectOption: (
