@@ -17,7 +17,7 @@ class RavelinRequestCallbackPromiseWrapper(promise: Promise) : RavelinRequestCal
   private val promise = promise
 
   override fun success() {
-    promise.resolve(true)
+    promise.resolve(null)
   }
 
   override fun failure(error: RavelinError) {
@@ -39,7 +39,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
         override fun success(result: RavelinSDK?) {
           Log.d("RNRavelin", "Success")
-          promise.resolve(true)
+          promise.resolve(null)
         }
 
         override fun failure(error: RavelinError) {
@@ -68,7 +68,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     }
     promise.resolve(ravelinSdk.deviceId)
     ravelinSdk.customerId = customerId
-    promise.resolve(true)
+    promise.resolve(null)
   }
 
   @ReactMethod
@@ -79,7 +79,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     }
     promise.resolve(ravelinSdk.deviceId)
     ravelinSdk.orderId = orderId
-    promise.resolve(true)
+    promise.resolve(null)
   }
 
   @ReactMethod
@@ -295,7 +295,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     RavelinSDK.cleanup(object : RavelinCallback<String>() {
       override fun success(result: String?) {
         Log.d("RNRavelin", result?: "Success")
-        promise.resolve(true)
+        promise.resolve(null)
       }
 
       override fun failure(error: RavelinError) {
