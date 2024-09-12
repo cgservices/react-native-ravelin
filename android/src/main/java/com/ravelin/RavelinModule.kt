@@ -17,7 +17,7 @@ class RavelinRequestCallbackPromiseWrapper(promise: Promise) : RavelinRequestCal
   private val promise = promise
 
   override fun success() {
-    promise.resolve(true)
+    promise.resolve(null)
   }
 
   override fun failure(error: RavelinError) {
@@ -38,13 +38,13 @@ class RavelinModule(reactContext: ReactApplicationContext) :
       RavelinSDK.createInstance(it.application, apiKey, appVersion, null, object : RavelinCallback<RavelinSDK>() {
 
         override fun success(result: RavelinSDK?) {
-          Log.d("Ravelin SDK Setup", "Success")
-          promise.resolve(true)
+          Log.d("RNRavelin", "Success")
+          promise.resolve(null)
         }
 
         override fun failure(error: RavelinError) {
-          Log.e("Ravelin SDK Setup Error", error.message!!)
-          promise.resolve(false)
+          Log.e("RNRavelin", error.message!!)
+          promise.reject(Error(error.message))
         }
       })
     }
@@ -54,24 +54,43 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun getDeviceId(promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
-    promise.resolve(ravelinSdk!!.deviceId)
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    promise.resolve(ravelinSdk.deviceId)
   }
 
   @ReactMethod
   fun setCustomerId(customerId: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.customerId = customerId
-    promise.resolve(true)
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.customerId = customerId
+    promise.resolve(null)
   }
 
   @ReactMethod
   fun setOrderId(orderId: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.orderId = orderId
-    promise.resolve(true)
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.orderId = orderId
+    promise.resolve(null)
   }
 
   @ReactMethod
   fun trackPage(pageTitle: String, data: ReadableMap, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackPage(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackPage(
       pageTitle,
       Properties(data.toHashMap()),
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -80,7 +99,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackSearch(pageTitle: String, searchValue: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackSearch(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackSearch(
       pageTitle,
       searchValue,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -94,7 +118,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     optionValue: String,
     promise: Promise
   ) {
-    RavelinSDK.getSharedInstance()!!.trackSelectOption(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackSelectOption(
       pageTitle,
       option,
       optionValue,
@@ -104,7 +133,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackAddToCart(pageTitle: String, itemName: String, quantity: Int, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackAddToCart(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackAddToCart(
       pageTitle,
       itemName,
       quantity,
@@ -114,7 +148,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackRemoveFromCart(pageTitle: String, itemName: String, quantity: Int, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackRemoveFromCart(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackRemoveFromCart(
       pageTitle,
       itemName,
       quantity,
@@ -124,13 +163,22 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackAddToWishlist(pageTitle: String, itemName: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()
-      ?.trackAddToWishlist(pageTitle, itemName, RavelinRequestCallbackPromiseWrapper(promise))
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackAddToWishlist(pageTitle, itemName, RavelinRequestCallbackPromiseWrapper(promise))
   }
 
   @ReactMethod
   fun trackRemoveFromWishlist(pageTitle: String, itemName: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackRemoveFromWishlist(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackRemoveFromWishlist(
       pageTitle,
       itemName,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -139,7 +187,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackLanguageChange(pageTitle: String, language: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackLanguageChange(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackLanguageChange(
       pageTitle,
       language,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -148,7 +201,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackCurrencyChange(pageTitle: String, currency: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackCurrencyChange(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackCurrencyChange(
       pageTitle,
       currency,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -157,7 +215,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackViewContent(pageTitle: String, contentType: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackViewContent(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackViewContent(
       pageTitle,
       contentType,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -166,7 +229,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackEvent(eventType: String, pageTitle: String, data: ReadableMap, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackEvent(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackEvent(
       eventType,
       pageTitle,
       Properties(data.toHashMap()),
@@ -176,7 +244,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackLogin(customerId: String, pageTitle: String, data: ReadableMap, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackLogIn(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackLogIn(
       customerId,
       pageTitle,
       Properties(data.toHashMap()),
@@ -186,7 +259,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackLogOut(pageTitle: String, data: ReadableMap, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackLogOut(
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackLogOut(
       pageTitle,
       Properties(data.toHashMap()),
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -195,26 +273,34 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackFingerprint(promise: Promise) {
-      val ravelin = RavelinSDK.getSharedInstance()
-      ravelin!!.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
   }
 
   @ReactMethod
   fun trackPaste(pageTitle: String, value: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()
-      ?.trackPaste(pageTitle, value, RavelinRequestCallbackPromiseWrapper(promise))
+    val ravelinSdk = RavelinSDK.getSharedInstance()
+    if (ravelinSdk == null) {
+      promise.reject(Error("Failed to retrieve Instance"))
+      return
+    }
+    ravelinSdk.trackPaste(pageTitle, value, RavelinRequestCallbackPromiseWrapper(promise))
   }
 
   @ReactMethod
   fun cleanup(promise: Promise) {
     RavelinSDK.cleanup(object : RavelinCallback<String>() {
       override fun success(result: String?) {
-        Log.d("Ravelin SDK Cleanup", result?: "Success")
-        promise.resolve(true)
+        Log.d("RNRavelin", result?: "Success")
+        promise.resolve(null)
       }
 
       override fun failure(error: RavelinError) {
-        Log.e("Ravelin SDK Cleanup Error", error.message!!)
+        Log.e("RNRavelin", error.message!!)
         promise.resolve(false)
       }
     })

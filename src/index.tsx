@@ -2,10 +2,10 @@ import { NativeModules } from 'react-native';
 const { RavelinCore: Ravelin } = NativeModules;
 
 interface RavelinModuleInterface {
-  setUp: (apiKey: string, appVersion: string) => Promise<Boolean>;
+  setUp: (apiKey: string, appVersion: string) => Promise<void>;
   getDeviceId: () => Promise<string>;
-  setCustomerId: (customerId: string) => Promise<Boolean>;
-  setOrderId: (orderId: string) => Promise<Boolean>;
+  setCustomerId: (customerId: string) => Promise<void>;
+  setOrderId: (orderId: string) => Promise<void>;
   trackPage: (pageTitle: string, data: Record<string, string>) => Promise<void>;
   trackSearch: (pageTitle: string, searchValue: string) => Promise<void>;
   trackSelectOption: (
@@ -45,9 +45,9 @@ interface RavelinModuleInterface {
     pageTitle: string,
     data: Record<string, string>
   ) => Promise<void>;
-  trackFingerprint: () => Promise<boolean>;
+  trackFingerprint: () => Promise<void>;
   // cleanup - android only
-  cleanup?: () => Promise<boolean>;
+  cleanup?: () => Promise<void>;
 }
 
 export default Ravelin as RavelinModuleInterface;
