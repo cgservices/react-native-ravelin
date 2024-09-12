@@ -38,13 +38,13 @@ class RavelinModule(reactContext: ReactApplicationContext) :
       RavelinSDK.createInstance(it.application, apiKey, appVersion, null, object : RavelinCallback<RavelinSDK>() {
 
         override fun success(result: RavelinSDK?) {
-          Log.d("Ravelin SDK Setup", "Success")
+          Log.d("RNRavelin", "Success")
           promise.resolve(true)
         }
 
         override fun failure(error: RavelinError) {
-          Log.e("Ravelin SDK Setup Error", error.message!!)
-          promise.resolve(false)
+          Log.e("RNRavelin", error.message!!)
+          promise.reject(Error(error.message))
         }
       })
     }
@@ -54,24 +54,24 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun getDeviceId(promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
-    promise.resolve(ravelinSdk!!.deviceId)
+    promise.resolve(ravelinSdk?.deviceId)
   }
 
   @ReactMethod
   fun setCustomerId(customerId: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.customerId = customerId
+    RavelinSDK.getSharedInstance()?.customerId = customerId
     promise.resolve(true)
   }
 
   @ReactMethod
   fun setOrderId(orderId: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.orderId = orderId
+    RavelinSDK.getSharedInstance()?.orderId = orderId
     promise.resolve(true)
   }
 
   @ReactMethod
   fun trackPage(pageTitle: String, data: ReadableMap, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackPage(
+    RavelinSDK.getSharedInstance()?.trackPage(
       pageTitle,
       Properties(data.toHashMap()),
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -80,7 +80,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackSearch(pageTitle: String, searchValue: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackSearch(
+    RavelinSDK.getSharedInstance()?.trackSearch(
       pageTitle,
       searchValue,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -94,7 +94,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     optionValue: String,
     promise: Promise
   ) {
-    RavelinSDK.getSharedInstance()!!.trackSelectOption(
+    RavelinSDK.getSharedInstance()?.trackSelectOption(
       pageTitle,
       option,
       optionValue,
@@ -104,7 +104,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackAddToCart(pageTitle: String, itemName: String, quantity: Int, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackAddToCart(
+    RavelinSDK.getSharedInstance()?.trackAddToCart(
       pageTitle,
       itemName,
       quantity,
@@ -114,7 +114,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackRemoveFromCart(pageTitle: String, itemName: String, quantity: Int, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackRemoveFromCart(
+    RavelinSDK.getSharedInstance()?.trackRemoveFromCart(
       pageTitle,
       itemName,
       quantity,
@@ -130,7 +130,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackRemoveFromWishlist(pageTitle: String, itemName: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackRemoveFromWishlist(
+    RavelinSDK.getSharedInstance()?.trackRemoveFromWishlist(
       pageTitle,
       itemName,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -139,7 +139,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackLanguageChange(pageTitle: String, language: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackLanguageChange(
+    RavelinSDK.getSharedInstance()?.trackLanguageChange(
       pageTitle,
       language,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -148,7 +148,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackCurrencyChange(pageTitle: String, currency: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackCurrencyChange(
+    RavelinSDK.getSharedInstance()?.trackCurrencyChange(
       pageTitle,
       currency,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -157,7 +157,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackViewContent(pageTitle: String, contentType: String, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackViewContent(
+    RavelinSDK.getSharedInstance()?.trackViewContent(
       pageTitle,
       contentType,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -166,7 +166,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackEvent(eventType: String, pageTitle: String, data: ReadableMap, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackEvent(
+    RavelinSDK.getSharedInstance()?.trackEvent(
       eventType,
       pageTitle,
       Properties(data.toHashMap()),
@@ -176,7 +176,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackLogin(customerId: String, pageTitle: String, data: ReadableMap, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackLogIn(
+    RavelinSDK.getSharedInstance()?.trackLogIn(
       customerId,
       pageTitle,
       Properties(data.toHashMap()),
@@ -186,7 +186,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackLogOut(pageTitle: String, data: ReadableMap, promise: Promise) {
-    RavelinSDK.getSharedInstance()!!.trackLogOut(
+    RavelinSDK.getSharedInstance()?.trackLogOut(
       pageTitle,
       Properties(data.toHashMap()),
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -195,8 +195,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
 
   @ReactMethod
   fun trackFingerprint(promise: Promise) {
-      val ravelin = RavelinSDK.getSharedInstance()
-      ravelin!!.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
+      RavelinSDK.getSharedInstance()?.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
   }
 
   @ReactMethod
@@ -209,12 +208,12 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   fun cleanup(promise: Promise) {
     RavelinSDK.cleanup(object : RavelinCallback<String>() {
       override fun success(result: String?) {
-        Log.d("Ravelin SDK Cleanup", result?: "Success")
+        Log.d("RNRavelin", result?: "Success")
         promise.resolve(true)
       }
 
       override fun failure(error: RavelinError) {
-        Log.e("Ravelin SDK Cleanup Error", error.message!!)
+        Log.e("RNRavelin", error.message!!)
         promise.resolve(false)
       }
     })
