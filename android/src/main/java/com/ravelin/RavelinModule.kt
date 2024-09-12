@@ -57,7 +57,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
+    promise.resolve(ravelinSdk!!.deviceId)
   }
 
   @ReactMethod
@@ -66,8 +66,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.customerId = customerId
+    ravelinSdk!!.customerId = customerId
     promise.resolve(null)
   }
 
@@ -77,8 +76,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.orderId = orderId
+    ravelinSdk!!.orderId = orderId
     promise.resolve(null)
   }
 
@@ -88,8 +86,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackPage(
+    ravelinSdk!!.trackPage(
       pageTitle,
       Properties(data.toHashMap()),
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -102,8 +99,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackSearch(
+    ravelinSdk!!.trackSearch(
       pageTitle,
       searchValue,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -121,8 +117,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackSelectOption(
+    ravelinSdk!!.trackSelectOption(
       pageTitle,
       option,
       optionValue,
@@ -136,8 +131,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackAddToCart(
+    ravelinSdk!!.trackAddToCart(
       pageTitle,
       itemName,
       quantity,
@@ -151,8 +145,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackRemoveFromCart(
+    ravelinSdk!!.trackRemoveFromCart(
       pageTitle,
       itemName,
       quantity,
@@ -166,8 +159,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackAddToWishlist(pageTitle, itemName, RavelinRequestCallbackPromiseWrapper(promise))
+    ravelinSdk!!.trackAddToWishlist(pageTitle, itemName, RavelinRequestCallbackPromiseWrapper(promise))
   }
 
   @ReactMethod
@@ -176,8 +168,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackRemoveFromWishlist(
+    ravelinSdk!!.trackRemoveFromWishlist(
       pageTitle,
       itemName,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -190,8 +181,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackLanguageChange(
+    ravelinSdk!!.trackLanguageChange(
       pageTitle,
       language,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -204,8 +194,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackCurrencyChange(
+    ravelinSdk!!.trackCurrencyChange(
       pageTitle,
       currency,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -218,8 +207,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackViewContent(
+    ravelinSdk!!.trackViewContent(
       pageTitle,
       contentType,
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -232,8 +220,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackEvent(
+    ravelinSdk!!.trackEvent(
       eventType,
       pageTitle,
       Properties(data.toHashMap()),
@@ -247,8 +234,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackLogIn(
+    ravelinSdk!!.trackLogIn(
       customerId,
       pageTitle,
       Properties(data.toHashMap()),
@@ -262,8 +248,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackLogOut(
+    ravelinSdk!!.trackLogOut(
       pageTitle,
       Properties(data.toHashMap()),
       RavelinRequestCallbackPromiseWrapper(promise)
@@ -276,8 +261,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
+    ravelinSdk!!.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
   }
 
   @ReactMethod
@@ -286,8 +270,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     if (ravelinSdk == null) {
       promise.reject(Error("Failed to retrieve Instance"))
     }
-    promise.resolve(ravelinSdk.deviceId)
-    ravelinSdk.trackPaste(pageTitle, value, RavelinRequestCallbackPromiseWrapper(promise))
+    ravelinSdk!!.trackPaste(pageTitle, value, RavelinRequestCallbackPromiseWrapper(promise))
   }
 
   @ReactMethod
