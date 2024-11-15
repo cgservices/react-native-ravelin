@@ -32,6 +32,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "bob build",
+    "prepack": "bob build",
     "release": "release-it"
   },
   "keywords": [
