@@ -35,7 +35,7 @@ In your app's build.gradle add the following
 
   dependencies {
     ...
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
   }
 ```
 
@@ -66,7 +66,7 @@ const { RavelinCore: Ravelin } = require('react-native-ravelin');
 
 The various handlers the SDK provides are the ones listed in this interface here...
 
-```js
+```ts
 interface RavelinModuleInterface {
   setUp: (apiKey: string, appVersion: string) => Promise<boolean>;
   getDeviceId: () => Promise<string>;
