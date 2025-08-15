@@ -14,6 +14,8 @@ yarn add react-native-ravelin
 
 ## Additional setup
 
+### Android
+
 In your app's build.gradle add the following
 ```
   android {
@@ -44,6 +46,14 @@ Documentation can be found here:
 - https://developer.ravelin.com/merchant/libraries-and-sdks/android/core-sdk/android/#proguard-rules
 Rules to be added:
 - https://developer.ravelin.com/merchant/libraries-and-sdks/android/core-sdk/proguard-rules-core/
+
+### iOS
+
+Add the following at the top of your Podfile:
+```
+source 'https://cdn.cocoapods.org/'
+source 'https://github.com/unravelin/Specs.git'
+```
 
 ## Usage
 
