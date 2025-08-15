@@ -1,6 +1,5 @@
 package com.ravelin
 
-import android.app.Application
 import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -11,12 +10,13 @@ import com.ravelin.core.RavelinSDK
 import com.ravelin.core.callback.RavelinCallback
 import com.ravelin.core.callback.RavelinRequestCallback
 import com.ravelin.core.model.RavelinError
+import com.ravelin.core.model.ResponsePayload
 import com.ravelin.core.util.typealiasses.Properties
 
 class RavelinRequestCallbackPromiseWrapper(promise: Promise) : RavelinRequestCallback() {
   private val promise = promise
 
-  override fun success() {
+  override fun success(payload: Array<ResponsePayload>?) {
     promise.resolve(null)
   }
 
@@ -35,18 +35,25 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   @ReactMethod
   fun setUp(apiKey: String, appVersion: String, promise: Promise) {
     currentActivity?.let {
-      RavelinSDK.createInstance(it.application, apiKey, appVersion, null, object : RavelinCallback<RavelinSDK>() {
+      RavelinSDK.createInstance(
+        it.application,
+        apiKey,
+        appVersion,
+        null,
+        false,
+        null,
+        object : RavelinCallback<RavelinSDK>() {
+          override fun success(result: RavelinSDK?) {
+            Log.d("RNRavelin", "Success")
+            promise.resolve(null)
+          }
 
-        override fun success(result: RavelinSDK?) {
-          Log.d("RNRavelin", "Success")
-          promise.resolve(null)
+          override fun failure(error: RavelinError) {
+            Log.e("RNRavelin", error.message!!)
+            promise.reject(Error(error.message))
+          }
         }
-
-        override fun failure(error: RavelinError) {
-          Log.e("RNRavelin", error.message!!)
-          promise.reject(Error(error.message))
-        }
-      })
+      )
     }
 
   }
@@ -168,7 +175,11 @@ class RavelinModule(reactContext: ReactApplicationContext) :
       promise.reject(Error("Failed to retrieve Instance"))
       return
     }
-    ravelinSdk.trackAddToWishlist(pageTitle, itemName, RavelinRequestCallbackPromiseWrapper(promise))
+    ravelinSdk.trackAddToWishlist(
+      pageTitle,
+      itemName,
+      RavelinRequestCallbackPromiseWrapper(promise)
+    )
   }
 
   @ReactMethod
@@ -295,7 +306,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   fun cleanup(promise: Promise) {
     RavelinSDK.cleanup(object : RavelinCallback<String>() {
       override fun success(result: String?) {
-        Log.d("RNRavelin", result?: "Success")
+        Log.d("RNRavelin", result ?: "Success")
         promise.resolve(null)
       }
 

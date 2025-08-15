@@ -5,21 +5,19 @@ import RavelinCore
 
 @objc(RavelinCore)
 class RavelinCore: RCTEventEmitter {
-
-
     override init() {
         super.init()
     }
 
     @objc func setUp(_ apiKey: String, _appVersion: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-            var ravelin = Ravelin.createInstance(apiKey)
-            if (ravelin.deviceId != "") {
-                resolve(nil)
-            } else {
-                let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
-                reject("instantiation_error", "Ravelin SDK could not be instantiatied", error)
-            }
+        var ravelin = Ravelin.createInstance(apiKey)
+        if (ravelin.deviceId != "") {
+            resolve(nil)
+        } else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("instantiation_error", "Ravelin SDK could not be instantiatied", error)
         }
+    }
 
     @objc func getDeviceId(_ resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
         var deviceId = Ravelin.sharedInstance().deviceId
@@ -57,8 +55,8 @@ class RavelinCore: RCTEventEmitter {
 
 
     @objc func trackPage(_ pageTitle: String, data: [String:String],
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                         resolve: @escaping RCTPromiseResolveBlock,
+                         reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
         Ravelin.sharedInstance().trackPage(pageTitle, eventProperties: data, completionHandler: { data, response, error in
             if error != nil {
@@ -71,8 +69,8 @@ class RavelinCore: RCTEventEmitter {
 
 
     @objc func trackSearch(_ pageTitle: String, searchValue: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                           resolve: @escaping RCTPromiseResolveBlock,
+                           reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
         Ravelin.sharedInstance().trackSearch(pageTitle, searchValue: searchValue, completionHandler: { data, response, error in
             if error != nil {
@@ -84,8 +82,8 @@ class RavelinCore: RCTEventEmitter {
     }
 
     @objc func trackSelectOption(_ pageTitle: String, option: String, optionValue: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                                 resolve: @escaping RCTPromiseResolveBlock,
+                                 reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
         Ravelin.sharedInstance().trackSelectOption(pageTitle, option: option, optionValue: optionValue, completionHandler: { data, response, error in
             if error != nil {
@@ -98,10 +96,10 @@ class RavelinCore: RCTEventEmitter {
 
 
     @objc func trackAddToCart(_ pageTitle: String, itemName: String, quantity: NSNumber,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                              resolve: @escaping RCTPromiseResolveBlock,
+                              reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
-        Ravelin.sharedInstance().trackAddToCart(pageTitle: pageTitle, itemName: itemName, quantity: quantity, completionHandler: { data, response, error in
+        Ravelin.sharedInstance().trackAddToCart(pageTitle, itemName: itemName, quantity: quantity, completionHandler: { data, response, error in
             if error != nil {
                 reject("0", error?.localizedDescription, error)
             } else {
@@ -112,10 +110,10 @@ class RavelinCore: RCTEventEmitter {
 
 
     @objc func trackRemoveFromCart(_ pageTitle: String, itemName: String, quantity: NSNumber,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                                   resolve: @escaping RCTPromiseResolveBlock,
+                                   reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
-        Ravelin.sharedInstance().trackRemoveFromCart(pageTitle: pageTitle, itemName: itemName, quantity: quantity, completionHandler: { data, response, error in
+        Ravelin.sharedInstance().trackRemoveFromCart(pageTitle, itemName: itemName, quantity: quantity, completionHandler: { data, response, error in
             if error != nil {
                 reject("0", error?.localizedDescription, error)
             } else {
@@ -125,10 +123,10 @@ class RavelinCore: RCTEventEmitter {
     }
 
     @objc func trackAddToWishlist(_ pageTitle: String, itemName: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                                  resolve: @escaping RCTPromiseResolveBlock,
+                                  reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
-        Ravelin.sharedInstance().trackAddToWishlist(pageTitle: pageTitle, itemName: itemName, completionHandler: { data, response, error in
+        Ravelin.sharedInstance().trackAddToWishlist(pageTitle, itemName: itemName, completionHandler: { data, response, error in
             if error != nil {
                 reject("0", error?.localizedDescription, error)
             } else {
@@ -138,10 +136,10 @@ class RavelinCore: RCTEventEmitter {
     }
 
     @objc func trackRemoveFromWishlist(_ pageTitle: String, itemName: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                                       resolve: @escaping RCTPromiseResolveBlock,
+                                       reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
-        Ravelin.sharedInstance().trackRemoveFromWishlist(pageTitle: pageTitle, itemName: itemName, completionHandler: { data, response, error in
+        Ravelin.sharedInstance().trackRemoveFromWishlist(pageTitle, itemName: itemName, completionHandler: { data, response, error in
             if error != nil {
                 reject("0", error?.localizedDescription, error)
             } else {
@@ -152,8 +150,8 @@ class RavelinCore: RCTEventEmitter {
 
 
     @objc func trackLanguageChange(_ pageTitle: String, language: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                                   resolve: @escaping RCTPromiseResolveBlock,
+                                   reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
 
         Ravelin.sharedInstance().track(pageTitle, eventName: "LANGUAGE_CHANGED", eventProperties: ["language":language], completionHandler: { data, response, error in
@@ -166,8 +164,8 @@ class RavelinCore: RCTEventEmitter {
     }
 
     @objc func trackCurrencyChange(_ pageTitle: String, currency: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                                   resolve: @escaping RCTPromiseResolveBlock,
+                                   reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
 
         Ravelin.sharedInstance().track(pageTitle, eventName: "CURRENCY_CHANGED", eventProperties: ["currency":currency], completionHandler: { data, response, error in
@@ -196,8 +194,8 @@ class RavelinCore: RCTEventEmitter {
 
 
     @objc func trackEvent(_ eventType:String, pageTitle: String, data: [String:String],
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                          resolve: @escaping RCTPromiseResolveBlock,
+                          reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
 
         Ravelin.sharedInstance().track(pageTitle, eventName: eventType, eventProperties: data, completionHandler: { data, response, error in
@@ -211,8 +209,8 @@ class RavelinCore: RCTEventEmitter {
 
 
     @objc func trackLogin(_ _customerId: String, pageTitle: String, data: [String:String],
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                          resolve: @escaping RCTPromiseResolveBlock,
+                          reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
 
         Ravelin.sharedInstance().trackLogin(pageTitle, eventProperties: data, completionHandler: { data, response, error in
@@ -225,8 +223,8 @@ class RavelinCore: RCTEventEmitter {
     }
 
     @objc func trackFingerprint(_
-                            resolve: @escaping RCTPromiseResolveBlock,
-                            reject: @escaping RCTPromiseRejectBlock ) -> Void
+                                resolve: @escaping RCTPromiseResolveBlock,
+                                reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
         Ravelin.sharedInstance().trackFingerprint({ data, response, error in
             if error != nil {
@@ -238,8 +236,8 @@ class RavelinCore: RCTEventEmitter {
     }
 
     @objc func trackLogOut(_ pageTitle: String, data: [String:String],
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
+                           resolve: @escaping RCTPromiseResolveBlock,
+                           reject: @escaping RCTPromiseRejectBlock ) -> Void
     {
 
         Ravelin.sharedInstance().trackLogout(pageTitle, eventProperties: data, completionHandler: { data, response, error in
@@ -252,6 +250,6 @@ class RavelinCore: RCTEventEmitter {
     }
 
     override static func requiresMainQueueSetup() -> Bool {
-      return true
+        return true
     }
 }

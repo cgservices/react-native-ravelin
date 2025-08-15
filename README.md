@@ -14,6 +14,8 @@ yarn add react-native-ravelin
 
 ## Additional setup
 
+### Android
+
 In your app's build.gradle add the following
 ```
   android {
@@ -35,7 +37,7 @@ In your app's build.gradle add the following
 
   dependencies {
     ...
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
   }
 ```
 
@@ -44,6 +46,14 @@ Documentation can be found here:
 - https://developer.ravelin.com/merchant/libraries-and-sdks/android/core-sdk/android/#proguard-rules
 Rules to be added:
 - https://developer.ravelin.com/merchant/libraries-and-sdks/android/core-sdk/proguard-rules-core/
+
+### iOS
+
+Add the following at the top of your Podfile:
+```
+source 'https://cdn.cocoapods.org/'
+source 'https://github.com/unravelin/Specs.git'
+```
 
 ## Usage
 
@@ -66,7 +76,7 @@ const { RavelinCore: Ravelin } = require('react-native-ravelin');
 
 The various handlers the SDK provides are the ones listed in this interface here...
 
-```js
+```ts
 interface RavelinModuleInterface {
   setUp: (apiKey: string, appVersion: string) => Promise<boolean>;
   getDeviceId: () => Promise<string>;
