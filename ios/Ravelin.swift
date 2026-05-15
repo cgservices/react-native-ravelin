@@ -305,6 +305,11 @@ class RavelinReactNative: NSObject {
         }
     }
 
+    @objc func cleanup(_ resolve: @escaping RCTPromiseResolveBlock,
+                       reject: @escaping RCTPromiseRejectBlock) -> Void {
+        resolve(nil)
+    }
+
     @objc static func requiresMainQueueSetup() -> Bool {
         return false
     }

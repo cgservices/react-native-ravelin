@@ -1,6 +1,6 @@
 {
   "name": "react-native-ravelin",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "React Native Ravelin SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -63,8 +63,8 @@
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "react": ">=18.2.0",
+    "react-native": ">=0.76.0"
   },
   "packageManager": "yarn@3.6.1",
   "commitlint": {
@@ -132,5 +132,13 @@
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "name": "RavelinCoreSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.ravelin"
+    }
   }
 }
