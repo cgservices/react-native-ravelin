@@ -8,7 +8,7 @@ React Native Ravelin SDK
 npm install react-native-ravelin
 ```
 or 
-```
+```sh
 yarn add react-native-ravelin
 ```
 
@@ -17,7 +17,7 @@ yarn add react-native-ravelin
 ### Android
 
 In your app's build.gradle add the following
-```
+```groovy
   android {
     ...
     compileOptions {
@@ -50,7 +50,7 @@ Rules to be added:
 ### iOS
 
 Add the following at the top of your Podfile:
-```
+```ruby
 source 'https://cdn.cocoapods.org/'
 source 'https://github.com/unravelin/Specs.git'
 ```
@@ -58,84 +58,72 @@ source 'https://github.com/unravelin/Specs.git'
 ## Usage
 
 ```js
-const { RavelinCore: Ravelin } = require('react-native-ravelin');
+import Ravelin from 'react-native-ravelin';
 
-...
-  await Ravelin.setUp(API_KEY)
-  await Ravelin.setCustomerId(USER.id)
-  // must be called immediately after setup and setting customer ID to register device info
-  await Ravelin.trackFingerprint()
-  const deviceId = await Ravelin.getDeviceId()
-  await Ravelin.trackPage('Login', { any: 'additional data' })
-  await Ravelin.trackLogin(USER.email || SOME_UNIQUE_ID, 'Login', { any: 'additional data' })
-  await Ravelin.trackLogOut('Logout', { any: 'additional data' })
-
+await Ravelin.setUp(API_KEY, APP_VERSION)
+await Ravelin.setCustomerId(USER.id)
+// must be called immediately after setup and setting customer ID to register device info
+await Ravelin.trackFingerprint()
+const deviceId = await Ravelin.getDeviceId()
+await Ravelin.trackPage('Login', { any: 'additional data' })
+await Ravelin.trackLogin('Login', { any: 'additional data' })
+await Ravelin.trackLogOut('Logout', { any: 'additional data' })
 ```
 
 ## Ravelin Interface
 
-The various handlers the SDK provides are the ones listed in this interface here...
+The various handlers the SDK provides are the ones listed in this interface here:
 
 ```ts
-interface RavelinModuleInterface {
-  setUp: (apiKey: string, appVersion: string) => Promise<boolean>;
+export interface RavelinModuleInterface {
+  setUp: (apiKey: string, appVersion: string) => Promise<void>;
   getDeviceId: () => Promise<string>;
-  setCustomerId: (customerId: string) => Promise<boolean>;
-  setOrderId: (orderId: string) => Promise<boolean>;
-  trackPage: (
-    pageTitle: string,
-    data: Record<string, string>
-  ) => Promise<boolean>;
-  trackSearch: (pageTitle: string, searchValue: string) => Promise<boolean>;
+  setCustomerId: (customerId: string) => Promise<void>;
+  setOrderId: (orderId: string) => Promise<void>;
+  trackPage: (pageTitle: string, data: Record<string, unknown>) => Promise<void>;
+  trackSearch: (pageTitle: string, searchValue: string) => Promise<void>;
   trackSelectOption: (
     pageTitle: string,
     option: string,
     optionValue: string
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   trackAddToCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => Promise<boolean>;
+  ) => Promise<void>;
   trackRemoveFromCart: (
     pageTitle: string,
     itemName: string,
     quantity: number
-  ) => Promise<boolean>;
-  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<boolean>;
+  ) => Promise<void>;
+  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<void>;
   trackRemoveFromWishlist: (
     pageTitle: string,
     itemName: string
-  ) => Promise<boolean>;
-  trackLanguageChange: (
-    pageTitle: string,
-    language: string
-  ) => Promise<boolean>;
-  trackCurrencyChange: (
-    pageTitle: string,
-    currency: string
-  ) => Promise<boolean>;
-  trackViewContent: (
-    pageTitle: string,
-    contentType: string
-  ) => Promise<boolean>;
+  ) => Promise<void>;
+  trackLanguageChange: (pageTitle: string, language: string) => Promise<void>;
+  trackCurrencyChange: (pageTitle: string, currency: string) => Promise<void>;
+  trackViewContent: (pageTitle: string, contentType: string) => Promise<void>;
   trackEvent: (
     eventType: string,
     pageTitle: string,
-    data: Record<string, string>
-  ) => Promise<boolean>;
+    data: Record<string, unknown>
+  ) => Promise<void>;
   trackLogin: (
-    customerId: string,
     pageTitle: string,
-    data: Record<string, string>
-  ) => Promise<boolean>;
+    data: Record<string, unknown>
+  ) => Promise<void>;
   trackLogOut: (
     pageTitle: string,
-    data: Record<string, string>
-  ) => Promise<boolean>;
-  trackFingerprint: () => Promise<boolean>;
-  trackPaste: () => Promise<boolean>;
+    data: Record<string, unknown>
+  ) => Promise<void>;
+  trackFingerprint: () => Promise<void>;
+  trackPaste: (pageTitle: string, pastedValue: string) => Promise<void>;
+  cleanup: () => Promise<void>;
 }
+```
+
 ---
 
 Made with [create-react-native-library](https://github.com/callstack/react-native-builder-bob)

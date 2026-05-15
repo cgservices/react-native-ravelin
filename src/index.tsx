@@ -1,12 +1,23 @@
 import { NativeModules } from 'react-native';
-const { RavelinCore: Ravelin } = NativeModules;
 
-interface RavelinModuleInterface {
+const { RavelinCore: RavelinNative } = NativeModules;
+
+if (!RavelinNative) {
+  throw new Error(
+    'react-native-ravelin: NativeModule "RavelinCore" is null. ' +
+      'Ensure the library is correctly linked.'
+  );
+}
+
+export interface RavelinModuleInterface {
   setUp: (apiKey: string, appVersion: string) => Promise<void>;
   getDeviceId: () => Promise<string>;
   setCustomerId: (customerId: string) => Promise<void>;
   setOrderId: (orderId: string) => Promise<void>;
-  trackPage: (pageTitle: string, data: Record<string, string>) => Promise<void>;
+  trackPage: (
+    pageTitle: string,
+    data: Record<string, unknown>
+  ) => Promise<void>;
   trackSearch: (pageTitle: string, searchValue: string) => Promise<void>;
   trackSelectOption: (
     pageTitle: string,
@@ -34,20 +45,19 @@ interface RavelinModuleInterface {
   trackEvent: (
     eventType: string,
     pageTitle: string,
-    data: Record<string, string>
+    data: Record<string, unknown>
   ) => Promise<void>;
   trackLogin: (
-    customerId: string,
     pageTitle: string,
-    data: Record<string, string>
+    data: Record<string, unknown>
   ) => Promise<void>;
   trackLogOut: (
     pageTitle: string,
-    data: Record<string, string>
+    data: Record<string, unknown>
   ) => Promise<void>;
   trackFingerprint: () => Promise<void>;
-  // cleanup - android only
+  trackPaste: (pageTitle: string, pastedValue: string) => Promise<void>;
   cleanup?: () => Promise<void>;
 }
 
-export default Ravelin as RavelinModuleInterface;
+export default RavelinNative;

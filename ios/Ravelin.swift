@@ -1,27 +1,29 @@
 import Foundation
-import Network
 import React
 import RavelinCore
 
 @objc(RavelinCore)
-class RavelinCore: RCTEventEmitter {
-    override init() {
-        super.init()
-    }
+class RavelinReactNative: NSObject {
 
-    @objc func setUp(_ apiKey: String, _appVersion: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
-        var ravelin = Ravelin.createInstance(apiKey)
-        if (ravelin.deviceId != "") {
-            resolve(nil)
-        } else {
-            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
-            reject("instantiation_error", "Ravelin SDK could not be instantiatied", error)
+    @objc func setUp(_ apiKey: String, appVersion: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        Ravelin.shared.configure(apiKey: apiKey, customerId: nil, appVersion: appVersion) { result in
+            switch result {
+            case .success:
+                resolve(nil)
+            case .failure(let error):
+                reject("instantiation_error", "Ravelin SDK could not be instantiated", error as NSError)
+            }
         }
     }
 
-    @objc func getDeviceId(_ resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
-        var deviceId = Ravelin.sharedInstance().deviceId
-        if (deviceId != ""){
+    @objc func getDeviceId(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        let deviceId = Ravelin.shared.deviceId
+        if let deviceId = deviceId, !deviceId.isEmpty {
             resolve(deviceId)
         } else {
             let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
@@ -29,227 +31,281 @@ class RavelinCore: RCTEventEmitter {
         }
     }
 
-    @objc func setCustomerId(_ customerId: String, resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
-        Ravelin.sharedInstance().customerId = customerId
-        if (Ravelin.sharedInstance().customerId != "") {
-            resolve(nil)
-        } else {
+    @objc func setCustomerId(_ customerId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
             let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
-            reject("customer_id_error", "Ravelin SDK could save Customer ID", error)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
         }
+        Ravelin.shared.customerId = customerId
+        resolve(nil)
     }
 
-    @objc func setOrderId(_ orderId: String, resolve: @escaping RCTPromiseResolveBlock, reject reject: @escaping RCTPromiseRejectBlock) -> Void {
-        Ravelin.sharedInstance().orderId = orderId
-        if (Ravelin.sharedInstance().orderId != "") {
-            resolve(nil)
-        } else {
+    @objc func setOrderId(_ orderId: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
             let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
-            reject("instantiation_error", "Ravelin SDK could not save Order ID", error)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
         }
+        Ravelin.shared.orderId = orderId
+        resolve(nil)
     }
 
-    @objc func setOrderId(_ orderId: String) -> Void {
-        Ravelin.sharedInstance().orderId = orderId
-    }
-
-
-    @objc func trackPage(_ pageTitle: String, data: [String:String],
+    @objc func trackPage(_ pageTitle: String, data: [String: Any],
                          resolve: @escaping RCTPromiseResolveBlock,
-                         reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackPage(pageTitle, eventProperties: data, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                         reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackPage(pageTitle, eventProperties: data) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
-
 
     @objc func trackSearch(_ pageTitle: String, searchValue: String,
                            resolve: @escaping RCTPromiseResolveBlock,
-                           reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackSearch(pageTitle, searchValue: searchValue, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                           reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackSearch(pageTitle, searchValue: searchValue) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
 
     @objc func trackSelectOption(_ pageTitle: String, option: String, optionValue: String,
                                  resolve: @escaping RCTPromiseResolveBlock,
-                                 reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackSelectOption(pageTitle, option: option, optionValue: optionValue, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                                 reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackSelectOption(pageTitle, option: option, optionValue: optionValue) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
-
 
     @objc func trackAddToCart(_ pageTitle: String, itemName: String, quantity: NSNumber,
                               resolve: @escaping RCTPromiseResolveBlock,
-                              reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackAddToCart(pageTitle, itemName: itemName, quantity: quantity, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                              reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackAddToCart(pageTitle, itemName: itemName, quantity: quantity) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
-
 
     @objc func trackRemoveFromCart(_ pageTitle: String, itemName: String, quantity: NSNumber,
                                    resolve: @escaping RCTPromiseResolveBlock,
-                                   reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackRemoveFromCart(pageTitle, itemName: itemName, quantity: quantity, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                                   reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackRemoveFromCart(pageTitle, itemName: itemName, quantity: quantity) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
 
     @objc func trackAddToWishlist(_ pageTitle: String, itemName: String,
                                   resolve: @escaping RCTPromiseResolveBlock,
-                                  reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackAddToWishlist(pageTitle, itemName: itemName, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                                  reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackAddToWishlist(pageTitle, itemName: itemName) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
 
     @objc func trackRemoveFromWishlist(_ pageTitle: String, itemName: String,
                                        resolve: @escaping RCTPromiseResolveBlock,
-                                       reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackRemoveFromWishlist(pageTitle, itemName: itemName, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                                       reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackRemoveFromWishlist(pageTitle, itemName: itemName) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
-
 
     @objc func trackLanguageChange(_ pageTitle: String, language: String,
                                    resolve: @escaping RCTPromiseResolveBlock,
-                                   reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-
-        Ravelin.sharedInstance().track(pageTitle, eventName: "LANGUAGE_CHANGED", eventProperties: ["language":language], completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                                   reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackLanguageChange(pageTitle, language: language) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
 
     @objc func trackCurrencyChange(_ pageTitle: String, currency: String,
                                    resolve: @escaping RCTPromiseResolveBlock,
-                                   reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-
-        Ravelin.sharedInstance().track(pageTitle, eventName: "CURRENCY_CHANGED", eventProperties: ["currency":currency], completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
-    }
-
-
-    @objc func trackViewContent(_ pageTitle: String, contentType: String,
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-
-        Ravelin.sharedInstance().trackViewContent(pageTitle, contentType: contentType, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
-    }
-
-
-    @objc func trackEvent(_ eventType:String, pageTitle: String, data: [String:String],
-                          resolve: @escaping RCTPromiseResolveBlock,
-                          reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-
-        Ravelin.sharedInstance().track(pageTitle, eventName: eventType, eventProperties: data, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
-    }
-
-
-    @objc func trackLogin(_ _customerId: String, pageTitle: String, data: [String:String],
-                          resolve: @escaping RCTPromiseResolveBlock,
-                          reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-
-        Ravelin.sharedInstance().trackLogin(pageTitle, eventProperties: data, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
-            } else {
-                resolve(data)
-            }
-        })
-    }
-
-    @objc func trackFingerprint(_
-                                resolve: @escaping RCTPromiseResolveBlock,
-                                reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-        Ravelin.sharedInstance().trackFingerprint({ data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+                                   reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackCurrencyChange(pageTitle, currency: currency) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
                 resolve(nil)
             }
-        })
+        }
     }
 
-    @objc func trackLogOut(_ pageTitle: String, data: [String:String],
-                           resolve: @escaping RCTPromiseResolveBlock,
-                           reject: @escaping RCTPromiseRejectBlock ) -> Void
-    {
-
-        Ravelin.sharedInstance().trackLogout(pageTitle, eventProperties: data, completionHandler: { data, response, error in
-            if error != nil {
-                reject("0", error?.localizedDescription, error)
+    @objc func trackViewContent(_ pageTitle: String, contentType: String,
+                                resolve: @escaping RCTPromiseResolveBlock,
+                                reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackViewContent(pageTitle, contentType: contentType) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
             } else {
-                resolve(data)
+                resolve(nil)
             }
-        })
+        }
     }
 
-    override static func requiresMainQueueSetup() -> Bool {
-        return true
+    @objc func trackEvent(_ eventType: String, pageTitle: String, data: [String: Any],
+                          resolve: @escaping RCTPromiseResolveBlock,
+                          reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.track(pageTitle, eventName: eventType, eventProperties: data) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
+            } else {
+                resolve(nil)
+            }
+        }
+    }
+
+    @objc func trackLogin(_ pageTitle: String, data: [String: Any],
+                          resolve: @escaping RCTPromiseResolveBlock,
+                          reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackLogin(pageTitle, eventProperties: data) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
+            } else {
+                resolve(nil)
+            }
+        }
+    }
+
+    @objc func trackFingerprint(_ resolve: @escaping RCTPromiseResolveBlock,
+                                reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackFingerprint(nil) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
+            } else {
+                resolve(nil)
+            }
+        }
+    }
+
+    @objc func trackLogOut(_ pageTitle: String, data: [String: Any],
+                           resolve: @escaping RCTPromiseResolveBlock,
+                           reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackLogout(pageTitle, eventProperties: data) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
+            } else {
+                resolve(nil)
+            }
+        }
+    }
+
+    @objc func trackPaste(_ pageTitle: String, pastedValue: String,
+                          resolve: @escaping RCTPromiseResolveBlock,
+                          reject: @escaping RCTPromiseRejectBlock) -> Void {
+        guard Ravelin.shared.apiKey != nil else {
+            let error = NSError(domain: "RavelinCore", code: -1, userInfo: nil)
+            reject("not_configured", "Ravelin SDK has not been configured", error)
+            return
+        }
+        Ravelin.shared.trackPaste(pageTitle, pastedValue: pastedValue) { _, _, error in
+            if let error = error {
+                reject("track_error", error.localizedDescription, error)
+            } else {
+                resolve(nil)
+            }
+        }
+    }
+
+    @objc static func requiresMainQueueSetup() -> Bool {
+        return false
     }
 }
