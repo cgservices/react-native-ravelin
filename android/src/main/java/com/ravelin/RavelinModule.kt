@@ -36,12 +36,10 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   fun setUp(apiKey: String, appVersion: String, promise: Promise) {
     val application = reactApplicationContext.applicationContext as Application
     RavelinSDK.createInstance(
-      application,
-      apiKey,
-      appVersion,
-      null,
-      null,
-      object : RavelinCallback<RavelinSDK>() {
+      application = application,
+      apiKey = apiKey,
+      appVersion = appVersion,
+      callback = object : RavelinCallback<RavelinSDK>() {
         override fun success(result: RavelinSDK?) {
           promise.resolve(null)
         }
