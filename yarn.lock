@@ -1700,6 +1700,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@cgservices/react-native-ravelin@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@cgservices/react-native-ravelin@workspace:."
+  dependencies:
+    "@commitlint/config-conventional": ^17.0.2
+    "@evilmartians/lefthook": ^1.5.0
+    "@react-native/eslint-config": ^0.73.1
+    "@release-it/conventional-changelog": ^5.0.0
+    "@types/react": ^18.2.44
+    commitlint: ^17.0.2
+    del-cli: ^5.1.0
+    eslint: ^8.51.0
+    eslint-config-prettier: ^9.0.0
+    eslint-plugin-prettier: ^5.0.1
+    prettier: ^3.0.3
+    react: 18.2.0
+    react-native: 0.74.0
+    react-native-builder-bob: ^0.23.2
+    release-it: ^15.0.0
+    turbo: ^1.10.7
+    typescript: ^5.2.2
+  peerDependencies:
+    react: ">=18.2.0"
+    react-native: ">=0.76.0"
+  languageName: unknown
+  linkType: soft
+
 "@commitlint/cli@npm:^17.8.1":
   version: 17.8.1
   resolution: "@commitlint/cli@npm:17.8.1"
@@ -9630,33 +9657,6 @@ __metadata:
   checksum: 1bee701c21f28f10c5737c8000e7fd6d8f641cf46fe7de03f5086d9951d2c5f3cb45375e292519b85f44a28f907e37f6c7bff324cfb1913b3bee0cb4db2efeb7
   languageName: node
   linkType: hard
-
-"react-native-ravelin@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "react-native-ravelin@workspace:."
-  dependencies:
-    "@commitlint/config-conventional": ^17.0.2
-    "@evilmartians/lefthook": ^1.5.0
-    "@react-native/eslint-config": ^0.73.1
-    "@release-it/conventional-changelog": ^5.0.0
-    "@types/react": ^18.2.44
-    commitlint: ^17.0.2
-    del-cli: ^5.1.0
-    eslint: ^8.51.0
-    eslint-config-prettier: ^9.0.0
-    eslint-plugin-prettier: ^5.0.1
-    prettier: ^3.0.3
-    react: 18.2.0
-    react-native: 0.74.0
-    react-native-builder-bob: ^0.23.2
-    release-it: ^15.0.0
-    turbo: ^1.10.7
-    typescript: ^5.2.2
-  peerDependencies:
-    react: ">=18.2.0"
-    react-native: ">=0.76.0"
-  languageName: unknown
-  linkType: soft
 
 "react-native@npm:0.74.0":
   version: 0.74.0

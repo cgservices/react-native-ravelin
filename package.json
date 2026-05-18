@@ -1,5 +1,5 @@
 {
-  "name": "react-native-ravelin",
+  "name": "@cgservices/react-native-ravelin",
   "version": "1.0.0",
   "description": "React Native Ravelin SDK",
   "main": "lib/commonjs/index",
