@@ -8,7 +8,7 @@
   "author": "niek.albers@startselect.com",
   "homepage": "https://github.com/cgservices/react-native-ravelin",
   "react-native": "src/index",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "source": "src/index",
   "files": [
     "src",
