@@ -18,11 +18,11 @@ RCT_EXPORT_MODULE()
   return self;
 }
 
-- (void)setUp:(NSString *)apiKey
-   appVersion:(NSString *)appVersion
-      resolve:(RCTPromiseResolveBlock)resolve
-       reject:(RCTPromiseRejectBlock)reject {
-  [_impl setUp:apiKey appVersion:appVersion resolve:resolve reject:reject];
+- (void)configure:(NSString *)apiKey
+       appVersion:(NSString *)appVersion
+          resolve:(RCTPromiseResolveBlock)resolve
+           reject:(RCTPromiseRejectBlock)reject {
+  [_impl configure:apiKey appVersion:appVersion resolve:resolve reject:reject];
 }
 
 - (void)getDeviceId:(RCTPromiseResolveBlock)resolve

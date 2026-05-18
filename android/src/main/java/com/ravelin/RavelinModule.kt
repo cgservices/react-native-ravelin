@@ -32,7 +32,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     const val NAME = "RavelinCore"
   }
 
-  override fun setUp(apiKey: String, appVersion: String, promise: Promise) {
+  override fun configure(apiKey: String, appVersion: String, promise: Promise) {
     val application = reactApplicationContext.applicationContext as Application
     RavelinSDK.createInstance(
       application = application,

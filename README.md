@@ -60,7 +60,7 @@ source 'https://github.com/unravelin/Specs.git'
 ```js
 import Ravelin from 'react-native-ravelin';
 
-await Ravelin.setUp(API_KEY, APP_VERSION)
+await Ravelin.configure(API_KEY, APP_VERSION)
 await Ravelin.setCustomerId(USER.id)
 // must be called immediately after setup and setting customer ID to register device info
 await Ravelin.trackFingerprint()
@@ -76,7 +76,7 @@ The various handlers the SDK provides are the ones listed in this interface here
 
 ```ts
 export interface RavelinModuleInterface {
-  setUp: (apiKey: string, appVersion: string) => Promise<void>;
+  configure: (apiKey: string, appVersion: string) => Promise<void>;
   getDeviceId: () => Promise<string>;
   setCustomerId: (customerId: string) => Promise<void>;
   setOrderId: (orderId: string) => Promise<void>;

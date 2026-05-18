@@ -5,7 +5,7 @@ import RavelinCore
 @objc(RavelinCore)
 class RavelinReactNative: NSObject {
 
-    @objc func setUp(_ apiKey: String, appVersion: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
+    @objc func configure(_ apiKey: String, appVersion: String, resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) -> Void {
         Ravelin.shared.configure(apiKey: apiKey, customerId: nil, appVersion: appVersion) { result in
             switch result {
             case .success:

@@ -2,7 +2,7 @@ import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
-  setUp(apiKey: string, appVersion: string): Promise<void>;
+  configure(apiKey: string, appVersion: string): Promise<void>;
   getDeviceId(): Promise<string>;
   setCustomerId(customerId: string): Promise<void>;
   setOrderId(orderId: string): Promise<void>;
