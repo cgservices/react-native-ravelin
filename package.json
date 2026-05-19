@@ -1,6 +1,6 @@
 {
-  "name": "react-native-ravelin",
-  "version": "0.2.0",
+  "name": "@cgservices/react-native-ravelin",
+  "version": "1.0.0",
   "description": "React Native Ravelin SDK",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -8,7 +8,7 @@
   "author": "niek.albers@startselect.com",
   "homepage": "https://github.com/cgservices/react-native-ravelin",
   "react-native": "src/index",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "source": "src/index",
   "files": [
     "src",
@@ -63,10 +63,10 @@
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-native": "*"
+    "react": ">=18.2.0",
+    "react-native": ">=0.76.0"
   },
-  "packageManager": "yarn@3.6.1",
+  "packageManager": "yarn@3.8.7",
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -132,5 +132,13 @@
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "name": "RavelinCoreSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.ravelin"
+    }
   }
 }

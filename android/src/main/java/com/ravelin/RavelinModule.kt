@@ -1,9 +1,8 @@
 package com.ravelin
 
+import android.app.Application
 import android.util.Log
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 import com.ravelin.core.RavelinSDK
@@ -13,88 +12,79 @@ import com.ravelin.core.model.RavelinError
 import com.ravelin.core.model.ResponsePayload
 import com.ravelin.core.util.typealiasses.Properties
 
-class RavelinRequestCallbackPromiseWrapper(promise: Promise) : RavelinRequestCallback() {
-  private val promise = promise
+class RavelinRequestCallbackPromiseWrapper(private val promise: Promise) : RavelinRequestCallback() {
 
   override fun success(payload: Array<ResponsePayload>?) {
     promise.resolve(null)
   }
 
   override fun failure(error: RavelinError) {
-    promise.reject(Error(error.message))
+    promise.reject("ravelin_error", error.message ?: "Unknown error", null as Throwable?)
   }
 }
 
 class RavelinModule(reactContext: ReactApplicationContext) :
-  ReactContextBaseJavaModule(reactContext) {
+  NativeRavelinCoreSpec(reactContext) {
 
-  override fun getName(): String {
-    return "RavelinCore"
+  override fun getName(): String = NAME
+
+  companion object {
+    const val NAME = "RavelinCore"
   }
 
-  @ReactMethod
-  fun setUp(apiKey: String, appVersion: String, promise: Promise) {
-    currentActivity?.let {
-      RavelinSDK.createInstance(
-        it.application,
-        apiKey,
-        appVersion,
-        null,
-        false,
-        null,
-        object : RavelinCallback<RavelinSDK>() {
-          override fun success(result: RavelinSDK?) {
-            Log.d("RNRavelin", "Success")
-            promise.resolve(null)
-          }
-
-          override fun failure(error: RavelinError) {
-            Log.e("RNRavelin", error.message!!)
-            promise.reject(Error(error.message))
-          }
+  override fun configure(apiKey: String, appVersion: String, promise: Promise) {
+    val application = reactApplicationContext.applicationContext as Application
+    RavelinSDK.createInstance(
+      application = application,
+      apiKey = apiKey,
+      appVersion = appVersion,
+      callback = object : RavelinCallback<RavelinSDK>() {
+        override fun success(result: RavelinSDK?) {
+          promise.resolve(null)
         }
-      )
-    }
 
+        override fun failure(error: RavelinError) {
+          val message = error.message ?: "Unknown error"
+          Log.e("RNRavelin", message)
+          promise.reject("instantiation_error", message, null as Throwable?)
+        }
+      }
+    )
   }
 
-  @ReactMethod
-  fun getDeviceId(promise: Promise) {
+  override fun getDeviceId(promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     promise.resolve(ravelinSdk.deviceId)
   }
 
-  @ReactMethod
-  fun setCustomerId(customerId: String, promise: Promise) {
+  override fun setCustomerId(customerId: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.customerId = customerId
     promise.resolve(null)
   }
 
-  @ReactMethod
-  fun setOrderId(orderId: String, promise: Promise) {
+  override fun setOrderId(orderId: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.orderId = orderId
     promise.resolve(null)
   }
 
-  @ReactMethod
-  fun trackPage(pageTitle: String, data: ReadableMap, promise: Promise) {
+  override fun trackPage(pageTitle: String, data: ReadableMap, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackPage(
@@ -104,11 +94,10 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackSearch(pageTitle: String, searchValue: String, promise: Promise) {
+  override fun trackSearch(pageTitle: String, searchValue: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackSearch(
@@ -118,8 +107,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackSelectOption(
+  override fun trackSelectOption(
     pageTitle: String,
     option: String,
     optionValue: String,
@@ -127,7 +115,7 @@ class RavelinModule(reactContext: ReactApplicationContext) :
   ) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackSelectOption(
@@ -138,41 +126,38 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackAddToCart(pageTitle: String, itemName: String, quantity: Int, promise: Promise) {
+  override fun trackAddToCart(pageTitle: String, itemName: String, quantity: Double, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackAddToCart(
       pageTitle,
       itemName,
-      quantity,
+      quantity.toInt(),
       RavelinRequestCallbackPromiseWrapper(promise)
     )
   }
 
-  @ReactMethod
-  fun trackRemoveFromCart(pageTitle: String, itemName: String, quantity: Int, promise: Promise) {
+  override fun trackRemoveFromCart(pageTitle: String, itemName: String, quantity: Double, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackRemoveFromCart(
       pageTitle,
       itemName,
-      quantity,
+      quantity.toInt(),
       RavelinRequestCallbackPromiseWrapper(promise)
     )
   }
 
-  @ReactMethod
-  fun trackAddToWishlist(pageTitle: String, itemName: String, promise: Promise) {
+  override fun trackAddToWishlist(pageTitle: String, itemName: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackAddToWishlist(
@@ -182,11 +167,10 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackRemoveFromWishlist(pageTitle: String, itemName: String, promise: Promise) {
+  override fun trackRemoveFromWishlist(pageTitle: String, itemName: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackRemoveFromWishlist(
@@ -196,11 +180,10 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackLanguageChange(pageTitle: String, language: String, promise: Promise) {
+  override fun trackLanguageChange(pageTitle: String, language: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackLanguageChange(
@@ -210,11 +193,10 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackCurrencyChange(pageTitle: String, currency: String, promise: Promise) {
+  override fun trackCurrencyChange(pageTitle: String, currency: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackCurrencyChange(
@@ -224,11 +206,10 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackViewContent(pageTitle: String, contentType: String, promise: Promise) {
+  override fun trackViewContent(pageTitle: String, contentType: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackViewContent(
@@ -238,11 +219,10 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackEvent(eventType: String, pageTitle: String, data: ReadableMap, promise: Promise) {
+  override fun trackEvent(eventType: String, pageTitle: String, data: ReadableMap, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackEvent(
@@ -253,26 +233,24 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackLogin(customerId: String, pageTitle: String, data: ReadableMap, promise: Promise) {
+  override fun trackLogin(pageTitle: String, data: ReadableMap, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackLogIn(
-      customerId,
+      ravelinSdk.customerId,
       pageTitle,
       Properties(data.toHashMap()),
       RavelinRequestCallbackPromiseWrapper(promise)
     )
   }
 
-  @ReactMethod
-  fun trackLogOut(pageTitle: String, data: ReadableMap, promise: Promise) {
+  override fun trackLogOut(pageTitle: String, data: ReadableMap, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackLogOut(
@@ -282,37 +260,34 @@ class RavelinModule(reactContext: ReactApplicationContext) :
     )
   }
 
-  @ReactMethod
-  fun trackFingerprint(promise: Promise) {
+  override fun trackFingerprint(promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
     ravelinSdk.trackFingerprint(RavelinRequestCallbackPromiseWrapper(promise))
   }
 
-  @ReactMethod
-  fun trackPaste(pageTitle: String, value: String, promise: Promise) {
+  override fun trackPaste(pageTitle: String, pastedValue: String, promise: Promise) {
     val ravelinSdk = RavelinSDK.getSharedInstance()
     if (ravelinSdk == null) {
-      promise.reject(Error("Failed to retrieve Instance"))
+      promise.reject("not_configured", "Ravelin SDK has not been configured", null as Throwable?)
       return
     }
-    ravelinSdk.trackPaste(pageTitle, value, RavelinRequestCallbackPromiseWrapper(promise))
+    ravelinSdk.trackPaste(pageTitle, pastedValue, RavelinRequestCallbackPromiseWrapper(promise))
   }
 
-  @ReactMethod
-  fun cleanup(promise: Promise) {
+  override fun cleanup(promise: Promise) {
     RavelinSDK.cleanup(object : RavelinCallback<String>() {
       override fun success(result: String?) {
-        Log.d("RNRavelin", result ?: "Success")
         promise.resolve(null)
       }
 
       override fun failure(error: RavelinError) {
-        Log.e("RNRavelin", error.message!!)
-        promise.resolve(false)
+        val message = error.message ?: "Unknown error"
+        Log.e("RNRavelin", message)
+        promise.reject("cleanup_error", message, null as Throwable?)
       }
     })
   }
