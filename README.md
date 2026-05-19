@@ -1,6 +1,6 @@
 # react-native-ravelin
 
-React Native Ravelin SDK
+Ravelin Mobile SDK wrapper for React Native
 
 ## Disclaimer
 
@@ -9,18 +9,21 @@ This software is provided "as is", without warranty of any kind, express or impl
 ## Installation
 
 ```sh
-npm install react-native-ravelin
+npm install @cgservices/react-native-ravelin
 ```
-or 
+
+or
+
 ```sh
-yarn add react-native-ravelin
+yarn add @cgservices/react-native-ravelin
 ```
 
 ## Additional setup
 
 ### Android
 
-In your app's build.gradle add the following
+In your app's build.gradle add the following:
+
 ```groovy
   android {
     ...
@@ -54,6 +57,7 @@ Rules to be added:
 ### iOS
 
 Add the following at the top of your Podfile:
+
 ```ruby
 source 'https://cdn.cocoapods.org/'
 source 'https://github.com/unravelin/Specs.git'
@@ -64,68 +68,41 @@ source 'https://github.com/unravelin/Specs.git'
 ```js
 import Ravelin from 'react-native-ravelin';
 
-await Ravelin.configure(API_KEY, APP_VERSION)
-await Ravelin.setCustomerId(USER.id)
-// must be called immediately after setup and setting customer ID to register device info
-await Ravelin.trackFingerprint()
-const deviceId = await Ravelin.getDeviceId()
-await Ravelin.trackPage('Login', { any: 'additional data' })
-await Ravelin.trackLogin('Login', { any: 'additional data' })
-await Ravelin.trackLogOut('Logout', { any: 'additional data' })
+await Ravelin.configure(API_KEY, APP_VERSION);
+await Ravelin.setCustomerId(USER.id);
+// Must be called immediately after setup and setting customer ID to register device info
+await Ravelin.trackFingerprint();
+const deviceId = await Ravelin.getDeviceId();
+await Ravelin.trackPage('Login', { any: 'additional data' });
+await Ravelin.trackLogin('Login', { any: 'additional data' });
+await Ravelin.trackLogOut('Logout', { any: 'additional data' });
 ```
 
-## Ravelin Interface
+## Available methods
 
 The various handlers the SDK provides are the ones listed in this interface here:
 
 ```ts
-export interface RavelinModuleInterface {
-  configure: (apiKey: string, appVersion: string) => Promise<void>;
-  getDeviceId: () => Promise<string>;
-  setCustomerId: (customerId: string) => Promise<void>;
-  setOrderId: (orderId: string) => Promise<void>;
-  trackPage: (pageTitle: string, data: Record<string, unknown>) => Promise<void>;
-  trackSearch: (pageTitle: string, searchValue: string) => Promise<void>;
-  trackSelectOption: (
-    pageTitle: string,
-    option: string,
-    optionValue: string
-  ) => Promise<void>;
-  trackAddToCart: (
-    pageTitle: string,
-    itemName: string,
-    quantity: number
-  ) => Promise<void>;
-  trackRemoveFromCart: (
-    pageTitle: string,
-    itemName: string,
-    quantity: number
-  ) => Promise<void>;
-  trackAddToWishlist: (pageTitle: string, itemName: string) => Promise<void>;
-  trackRemoveFromWishlist: (
-    pageTitle: string,
-    itemName: string
-  ) => Promise<void>;
-  trackLanguageChange: (pageTitle: string, language: string) => Promise<void>;
-  trackCurrencyChange: (pageTitle: string, currency: string) => Promise<void>;
-  trackViewContent: (pageTitle: string, contentType: string) => Promise<void>;
-  trackEvent: (
-    eventType: string,
-    pageTitle: string,
-    data: Record<string, unknown>
-  ) => Promise<void>;
-  trackLogin: (
-    pageTitle: string,
-    data: Record<string, unknown>
-  ) => Promise<void>;
-  trackLogOut: (
-    pageTitle: string,
-    data: Record<string, unknown>
-  ) => Promise<void>;
-  trackFingerprint: () => Promise<void>;
-  trackPaste: (pageTitle: string, pastedValue: string) => Promise<void>;
-  cleanup: () => Promise<void>;
-}
+configure(apiKey: string, appVersion: string): Promise<void>
+getDeviceId(): Promise<string>
+setCustomerId(customerId: string): Promise<void>
+setOrderId(orderId: string): Promise<void>
+trackPage(pageTitle: string, data: Record<string, unknown>): Promise<void>
+trackSearch(pageTitle: string, searchValue: string): Promise<void>
+trackSelectOption(pageTitle: string, option: string, optionValue: string): Promise<void>
+trackAddToCart(pageTitle: string, itemName: string, quantity: number): Promise<void>
+trackRemoveFromCart(pageTitle: string, itemName: string, quantity: number): Promise<void>
+trackAddToWishlist(pageTitle: string, itemName: string): Promise<void>
+trackRemoveFromWishlist(pageTitle: string, itemName: string): Promise<void>
+trackLanguageChange(pageTitle: string, language: string): Promise<void>
+trackCurrencyChange(pageTitle: string, currency: string): Promise<void>
+trackViewContent(pageTitle: string, contentType: string): Promise<void>
+trackEvent(eventType: string, pageTitle: string, data: Record<string, unknown>): Promise<void>
+trackLogin(pageTitle: string, data: Record<string, unknown>): Promise<void>
+trackLogOut(pageTitle: string, data: Record<string, unknown>): Promise<void>
+trackFingerprint(): Promise<void>
+trackPaste(pageTitle: string, pastedValue: string): Promise<void>
+cleanup(): Promise<void>
 ```
 
 ---
